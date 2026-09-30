@@ -11,7 +11,7 @@ import type { DesignConfig, NailArt } from "@/lib/types";
 export function LineVisual({ art, config, imageUrl, kind, className }: {
   art?: NailArt | null; config?: DesignConfig | null; imageUrl?: string | null; kind: string; className?: string;
 }) {
-  const base = art?.base ?? "#FDD3E3";
+  const base = art?.base ?? "#E3D4B8";
   return (
     <div className={cn("flex shrink-0 items-center justify-center overflow-hidden rounded-2xl", className)} style={{ background: backdropFor(base) }}>
       {imageUrl ? (

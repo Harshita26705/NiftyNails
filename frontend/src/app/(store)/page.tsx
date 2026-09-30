@@ -1,5 +1,6 @@
 import {
-  CreateSection, GiftSection, HowItWorks, Reviews, ShopByStyle, SizeSection, Social, StylistSection, Trending,
+  BrandStory, CreateSection, GiftSection, HowItWorks, Reviews, ShopByStyle, SizeSection, Social, StylistSection,
+  Trending,
 } from "@/components/home/Sections";
 import { Hero } from "@/components/home/Hero";
 import { apiOr } from "@/lib/api";
@@ -32,17 +33,18 @@ export default async function Home() {
   return (
     <main>
       <Hero
-        title={site.hero_title ?? "Nails that feel like you."}
+        title={site.hero_title ?? "Your nails, considered."}
         subtitle={site.hero_subtitle ?? "Handmade press-ons, designed with you."}
         products={heroProducts.slice(0, 3)}
       />
       <Trending products={popular.items} />
       <ShopByStyle categories={(options?.categories ?? []).filter((c) => samples[c.slug])} samples={samples} />
       <StylistSection sample={coquette} />
-      <CreateSection />
       <SizeSection />
-      <GiftSection sample={coquette} />
+      <CreateSection />
+      <BrandStory />
       <HowItWorks />
+      <GiftSection sample={coquette} />
       <Reviews reviews={reviews} />
       <Social products={all.items.slice(4, 10)} handle={site.instagram_handle} />
     </main>

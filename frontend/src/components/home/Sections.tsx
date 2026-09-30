@@ -44,7 +44,7 @@ export function ShopByStyle({ categories, samples }: { categories: Lookup[]; sam
             return (
               <Reveal key={cat.slug} delay={i * 50}>
                 <Link href={`/shop?category=${cat.slug}`} className="group block">
-                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[1.6rem] p-[4%] ring-1 ring-black/[0.03] transition group-hover:shadow-lift"
+                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[0.625rem] p-[4%] ring-1 ring-black/[0.03] transition group-hover:shadow-lift"
                     style={{ background: p ? backdropFor(p.art.base) : "var(--color-blush-50)" }}>
                     {p && <NailSetArt art={p.art} className="w-full scale-110 transition-transform duration-500 group-hover:scale-[1.16] group-hover:-rotate-2" />}
                   </div>
@@ -66,17 +66,17 @@ export function StylistSection({ sample }: { sample?: Product }) {
   return (
     <section className="py-10 md:py-20">
       <div className={wrap}>
-        <div className="grid grid-cols-1 items-center gap-10 overflow-hidden rounded-[2rem] bg-surface p-5 shadow-soft ring-1 ring-line md:grid-cols-2 md:p-12 [&>*]:min-w-0">
+        <div className="grid grid-cols-1 items-center gap-10 overflow-hidden rounded-[0.75rem] bg-surface p-5 shadow-soft ring-1 ring-line md:grid-cols-2 md:p-12 [&>*]:min-w-0">
           <div>
             <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase">
-              <Sparkles className="size-4" /> AI Nail Stylist
+              <Sparkles className="size-4" /> The Nifty Stylist
             </p>
             <h2 className="mt-3 font-display text-[32px] leading-[1.04] tracking-[-0.02em] md:text-[46px]">
-              Describe it. <em className="text-pink italic">We&apos;ll find it.</em>
+              A personal nail consultation, <em className="text-pink italic">curated for you.</em>
             </h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-2">
-              Tell us the vibe in your own words — or upload your outfit, saree or makeup look — and we&apos;ll match it
-              to designs we actually make.
+              Tell us the vibe in your own words — or upload your outfit, saree or makeup look — and we&apos;ll recommend
+              designs, colours and finishes we actually make. Optional, and never a replacement for the Design Studio.
             </p>
             <StylistPrompt className="mt-6" />
             <Link href="/stylist?tab=outfit" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-pink">
@@ -84,10 +84,11 @@ export function StylistSection({ sample }: { sample?: Product }) {
             </Link>
           </div>
 
-          <div className="relative rounded-[1.6rem] bg-blush-50 p-5 md:p-7">
-            <div className="ml-auto max-w-[85%] rounded-3xl rounded-br-lg bg-ink px-4 py-3 text-[14px] leading-relaxed text-white">
-              baby pink almond nails with chrome, little bows and pearls — cute but not too flashy
-            </div>
+          <div className="relative rounded-[0.625rem] bg-blush-50 p-5 md:p-7">
+            <p className="text-[10.5px] font-bold tracking-[0.16em] text-ink-3 uppercase">Consultation note</p>
+            <p className="mt-2 rounded-2xl bg-white px-4 py-3 text-[14px] leading-relaxed text-ink ring-1 ring-line">
+              &ldquo;Baby pink almond nails with chrome, little bows and pearls — cute but not too flashy.&rdquo;
+            </p>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {["Baby Pink", "Almond", "Chrome", "Bows", "Pearls", "Subtle"].map((c) => (
                 <span key={c} className="rounded-full bg-white px-2.5 py-1 text-[11.5px] font-semibold text-pink-deep ring-1 ring-blush-200">{c}</span>
@@ -126,7 +127,7 @@ export function CreateSection() {
   return (
     <section className="py-10 md:py-20">
       <div className={wrap}>
-        <div className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-10 text-white md:px-14 md:py-16">
+        <div className="relative overflow-hidden rounded-[0.75rem] bg-ink px-6 py-10 text-white md:px-14 md:py-16">
           <div aria-hidden className="absolute -top-24 -right-24 size-80 rounded-full bg-pink/30 blur-3xl" />
           <div className="relative grid grid-cols-1 gap-10 md:grid-cols-[1fr_1.1fr] md:items-center [&>*]:min-w-0">
             <div>
@@ -141,7 +142,7 @@ export function CreateSection() {
               <ButtonLink href="/create" size="lg" className="mt-7" icon={<Wand2 className="size-4" />}>Start designing</ButtonLink>
             </div>
             <div className="grid grid-cols-2 gap-3 md:gap-4">
-              <Link href="/create/chat" className="group rounded-[1.6rem] bg-white/[0.07] p-4 ring-1 ring-white/10 transition hover:bg-white/[0.11] md:p-5">
+              <Link href="/create/chat" className="group rounded-[0.625rem] bg-white/[0.07] p-4 ring-1 ring-white/10 transition hover:bg-white/[0.11] md:p-5">
                 <div className="flex h-32 items-end justify-center gap-1 md:h-40">
                   <MiniNail base="#F8C8D8" finish="chrome" charms={[{ kind: "bow", x: 0.5, y: 0.45, scale: 2.1 }]} />
                   <MiniNail base="#F8C8D8" finish="chrome" charms={[{ kind: "pearl", x: 0.5, y: 0.7, scale: 1.5 }, { kind: "pearl", x: 0.28, y: 0.62, scale: 1.4 }, { kind: "pearl", x: 0.72, y: 0.62, scale: 1.4 }]} />
@@ -149,10 +150,10 @@ export function CreateSection() {
                 <p className="mt-4 flex items-center gap-2 font-semibold"><MessageCircle className="size-4 text-blush-300" /> Chat design</p>
                 <p className="mt-1 text-[12.5px] leading-snug text-white/60">“pink chrome, tiny bows & pearls”</p>
               </Link>
-              <Link href="/create/draw" className="group rounded-[1.6rem] bg-white/[0.07] p-4 ring-1 ring-white/10 transition hover:bg-white/[0.11] md:p-5">
+              <Link href="/create/draw" className="group rounded-[0.625rem] bg-white/[0.07] p-4 ring-1 ring-white/10 transition hover:bg-white/[0.11] md:p-5">
                 <div className="flex h-32 items-end justify-center gap-1 md:h-40">
                   <MiniNail base="#CDB8E8" pattern="swirls" colour="#FFFFFF" />
-                  <MiniNail base="#FFFFFF" pattern="hearts" colour="#E0218A" />
+                  <MiniNail base="#FFFFFF" pattern="hearts" colour="#7A2E3A" />
                 </div>
                 <p className="mt-4 flex items-center gap-2 font-semibold"><Paintbrush className="size-4 text-blush-300" /> Draw your own</p>
                 <p className="mt-1 text-[12.5px] leading-snug text-white/60">Paint, add charms, nail by nail</p>
@@ -171,7 +172,7 @@ export function SizeSection() {
     <section className="py-10 md:py-20">
       <div className={`${wrap} grid items-center gap-10 md:grid-cols-2`}>
         <div className="order-2 md:order-1">
-          <div className="mx-auto max-w-sm rounded-[1.8rem] bg-surface p-5 shadow-lift ring-1 ring-line">
+          <div className="mx-auto max-w-sm rounded-[0.75rem] bg-surface p-5 shadow-lift ring-1 ring-line">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold">Your Nifty sizes</p>
               <span className="rounded-full bg-mint px-2.5 py-1 text-[11px] font-bold text-success">High confidence</span>
@@ -214,7 +215,7 @@ export function GiftSection({ sample }: { sample?: Product }) {
   return (
     <section className="py-10 md:py-20">
       <div className={wrap}>
-        <div className="grid items-center gap-8 overflow-hidden rounded-[2rem] bg-champagne px-6 py-10 md:grid-cols-2 md:px-14 md:py-14">
+        <div className="grid items-center gap-8 overflow-hidden rounded-[0.75rem] bg-champagne px-6 py-10 md:grid-cols-2 md:px-14 md:py-14">
           <div>
             <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase"><Gift className="size-4" /> Gift Nifty</p>
             <h2 className="mt-3 font-display text-[32px] leading-[1.04] tracking-[-0.02em] md:text-[46px]">
@@ -227,7 +228,7 @@ export function GiftSection({ sample }: { sample?: Product }) {
             <ButtonLink href="/gift" size="lg" className="mt-7" icon={<Gift className="size-4" />}>Build a gift</ButtonLink>
           </div>
           <div className="relative mx-auto w-full max-w-sm">
-            <div className="rounded-[1.6rem] bg-white p-5 shadow-lift">
+            <div className="rounded-[0.625rem] bg-white p-5 shadow-lift">
               <p className="text-[12px] font-semibold text-ink-2">For: best friend · 22 · loves Barbie</p>
               <div className="mt-4 space-y-2.5 text-[14px]">
                 {[[sample?.name ?? "Nail set", sample?.price_paise ?? 89900], ["Signature gift box", 29900], ["Personalised card", 9900], ["Satin bow scrunchie", 14900]].map(([n, p]) => (
@@ -249,6 +250,39 @@ export function GiftSection({ sample }: { sample?: Product }) {
   );
 }
 
+export function BrandStory() {
+  return (
+    <section className="py-14 md:py-28">
+      <div className={`${wrap} grid grid-cols-1 items-center gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16`}>
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[0.75rem] bg-blush-50 md:mx-0">
+          <div className="absolute inset-0 flex items-center justify-center p-10">
+            <MiniNail base="#EFE1C8" finish="matte" />
+          </div>
+        </div>
+        <div>
+          <p className="text-[11px] font-bold tracking-[0.28em] text-pink uppercase">The house</p>
+          <h2 className="mt-4 font-display text-[32px] leading-[1.08] tracking-[-0.02em] text-balance md:text-[48px]">
+            A nail house, <em className="text-pink italic">not a factory.</em>
+          </h2>
+          <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-pretty text-ink-2 md:text-[17px]">
+            Every set that leaves our studio is sculpted, painted and finished by hand — one artist, one set, start
+            to finish. We built the technology so you could design without limits; we kept the craft so what arrives
+            still feels made, not manufactured.
+          </p>
+          <dl className="mt-10 grid max-w-md grid-cols-2 gap-x-8 gap-y-6 border-t border-line pt-7">
+            {[["100%", "hand-painted"], ["7 days", "average lead time"], ["0–9", "sizes fitted to you"], ["1:1", "artist review on every custom set"]].map(([k, v]) => (
+              <div key={v}>
+                <dt className="font-display text-2xl leading-none">{k}</dt>
+                <dd className="mt-1.5 text-[12px] leading-snug text-ink-2">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HowItWorks() {
   const steps = [
     { icon: Palette, title: "Pick or design", body: "Shop a set, or create your own with our AI stylist or drawing studio." },
@@ -263,7 +297,7 @@ export function HowItWorks() {
         <div className="mt-8 grid grid-cols-2 gap-3 md:mt-10 md:gap-4 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.title} delay={i * 80} className="h-full">
-              <div className="h-full rounded-[1.4rem] bg-surface p-4 ring-1 ring-line md:rounded-[1.6rem] md:p-6">
+              <div className="h-full rounded-[0.5rem] bg-surface p-4 ring-1 ring-line md:rounded-[0.625rem] md:p-6">
                 <div className="flex items-center justify-between">
                   <span className="flex size-10 items-center justify-center rounded-2xl bg-blush-100 text-pink md:size-12"><s.icon className="size-5" /></span>
                   <span className="font-display text-3xl text-blush-200 md:text-4xl">{i + 1}</span>
@@ -288,7 +322,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
       </div>
       <div className="scrollbar-none mt-8 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 md:mx-auto md:grid md:max-w-7xl md:grid-cols-3 md:gap-6 md:px-6">
         {reviews.map((r) => (
-          <figure key={r.id} className="flex w-[82%] shrink-0 snap-start flex-col rounded-[1.6rem] bg-surface p-6 ring-1 ring-line sm:w-[48%] md:w-auto">
+          <figure key={r.id} className="flex w-[82%] shrink-0 snap-start flex-col rounded-[0.625rem] bg-surface p-6 ring-1 ring-line sm:w-[48%] md:w-auto">
             <Stars rating={r.rating} />
             {r.title && <p className="mt-4 font-display text-xl leading-snug">“{r.title}”</p>}
             <blockquote className="mt-2 flex-1 text-[14.5px] leading-relaxed text-ink-2">{r.body}</blockquote>

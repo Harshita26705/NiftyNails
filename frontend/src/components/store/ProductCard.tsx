@@ -80,7 +80,7 @@ export function ProductCard({ product, match, priority }: {
   return (
     <Link href={`/shop/${product.slug}`} className="group block" prefetch={priority ? true : undefined}>
       <div className="relative">
-        <ProductVisual product={product} className="aspect-square rounded-[1.6rem] ring-1 ring-black/[0.03] transition-shadow duration-300 group-hover:shadow-lift" />
+        <ProductVisual product={product} className="aspect-square rounded-[0.625rem] ring-1 ring-black/[0.03] transition-shadow duration-300 group-hover:shadow-lift" />
         <div className="absolute top-2.5 left-2.5 flex flex-col items-start gap-1.5">
           {match && (
             <span className="rounded-full bg-ink px-2.5 py-1 text-[11px] font-bold text-white tabular-nums shadow-sm">
@@ -121,7 +121,7 @@ export function ProductCard({ product, match, priority }: {
 export function ProductCardSkeleton() {
   return (
     <div>
-      <div className="skeleton aspect-square rounded-[1.6rem]" />
+      <div className="skeleton aspect-square rounded-[0.625rem]" />
       <div className="skeleton mt-3 h-4 w-3/4 rounded-full" />
       <div className="skeleton mt-2 h-3 w-1/2 rounded-full" />
     </div>

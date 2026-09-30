@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from pydantic import BaseModel
 from sqlalchemy import func, select
 
 from app.api.deps import CurrentUser, DbSession, OptionalUser
@@ -59,6 +61,40 @@ def login(data: LoginIn, response: Response, db: DbSession) -> AuthOut:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "That email and password don't match.")
     user.last_login_at = datetime.now(UTC)
     db.commit()
+    return _issue_session(response, user)
+
+
+class DemoLoginIn(BaseModel):
+    role: Literal["admin", "customer"]
+
+
+@router.post("/demo-login", response_model=AuthOut, dependencies=[Depends(auth_limiter)])
+def demo_login(data: DemoLoginIn, response: Response, db: DbSession) -> AuthOut:
+    """One-click demo access: finds or creates the deterministic demo account and signs in as it.
+
+    Same accounts `python -m app.seed --demo` creates (see app/seed/__main__.py) — never available in production.
+    """
+    if get_settings().is_production:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Not found.")
+    from app.seed.__main__ import DEMO_ACCOUNTS  # local import: keeps the seed module optional at API startup
+
+    email, password, role_name, full_name = next(a for a in DEMO_ACCOUNTS if a[2] == data.role)
+    user = db.scalar(select(User).where(func.lower(User.email) == email))
+    if user is None:
+        role = db.scalar(select(Role).where(Role.name == role_name))
+        if role is None:
+            role = Role(name=role_name, description=role_name.value.title())
+            db.add(role)
+            db.flush()
+        user = User(email=email, password_hash=hash_password(password), full_name=full_name,
+                    role_id=role.id, last_login_at=datetime.now(UTC))
+        db.add(user)
+    elif not user.is_active:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "This demo account has been deactivated.")
+    else:
+        user.last_login_at = datetime.now(UTC)
+    db.commit()
+    db.refresh(user)
     return _issue_session(response, user)
 
 

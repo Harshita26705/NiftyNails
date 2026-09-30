@@ -32,3 +32,64 @@ export function nailPath(shape: ShapeKey | string | undefined, h: number): strin
 
 /** Relative nail widths within a hand (thumb widest). */
 export const FINGER_SCALE = { thumb: 1.16, index: 0.95, middle: 1, ring: 0.92, pinky: 0.78 } as const;
+
+// ------------------------------------------------------------------ design-studio shape/French-tip geometry
+// Shapes are generated in a local unit box (radius ~10, centred on the origin) so a shared
+// `translate(x,y) rotate(r) scale(s)` transform can position/size/rotate any of them identically.
+
+function polygonPoints(sides: number, r: number, rotate = -Math.PI / 2): string {
+  return Array.from({ length: sides }, (_, i) => {
+    const a = rotate + (i * 2 * Math.PI) / sides;
+    return `${(r * Math.cos(a)).toFixed(2)},${(r * Math.sin(a)).toFixed(2)}`;
+  }).join(" ");
+}
+
+function starPoints(sides: number, rOuter: number, rInner: number, rotate = -Math.PI / 2): string {
+  const n = sides * 2;
+  return Array.from({ length: n }, (_, i) => {
+    const r = i % 2 === 0 ? rOuter : rInner;
+    const a = rotate + (i * Math.PI) / sides;
+    return `${(r * Math.cos(a)).toFixed(2)},${(r * Math.sin(a)).toFixed(2)}`;
+  }).join(" ");
+}
+
+/** A shape's outline as an SVG path/points string in local unit space (for a <path> or <polygon>). */
+export function shapeGeometry(shape: string, sides: number): { tag: "path" | "polygon" | "ellipse"; d?: string; points?: string } {
+  switch (shape) {
+    case "circle":
+      return { tag: "ellipse" };
+    case "rect":
+      return { tag: "path", d: "M -10 -10 L 10 -10 L 10 10 L -10 10 Z" };
+    case "rounded_rect":
+      return { tag: "path", d: "M -6 -10 Q 10 -10 10 -6 L 10 6 Q 10 10 6 10 L -6 10 Q -10 10 -10 6 L -10 -6 Q -10 -10 -6 -10 Z" };
+    case "triangle":
+      return { tag: "polygon", points: polygonPoints(3, 10.5) };
+    case "diamond":
+      return { tag: "polygon", points: polygonPoints(4, 10, 0) };
+    case "polygon":
+      return { tag: "polygon", points: polygonPoints(Math.max(3, Math.min(12, sides)), 10) };
+    case "star":
+      return { tag: "polygon", points: starPoints(Math.max(3, Math.min(10, sides)), 10, 4.2) };
+    case "line":
+      return { tag: "path", d: "M -10 0 L 10 0" };
+    case "heart":
+    default:
+      return { tag: "path", d: heartPathAt(0, 3, 1.55) };
+  }
+}
+
+/** Local-space heart outline (reused from the "hearts" pattern math, generalised to any centre/scale). */
+export function heartPathAt(x: number, y: number, s: number): string {
+  return `M ${x} ${y + 6 * s} C ${x - 8 * s} ${y + 1 * s} ${x - 8 * s} ${y - 6 * s} ${x - 3.5 * s} ${y - 6 * s} C ${x - 1.5 * s} ${y - 6 * s} ${x} ${y - 4.5 * s} ${x} ${y - 3.5 * s} C ${x} ${y - 4.5 * s} ${x + 1.5 * s} ${y - 6 * s} ${x + 3.5 * s} ${y - 6 * s} C ${x + 8 * s} ${y - 6 * s} ${x + 8 * s} ${y + 1 * s} ${x} ${y + 6 * s} Z`;
+}
+
+/**
+ * A French-tip band as a filled path, clipped to the nail outline by the caller. `depth`/`curve` are 0–1
+ * fractions of the nail height; `offsetX`/`offsetY` (also 0–1-ish, signed) nudge the band for asymmetric tips.
+ */
+export function frenchTipPath(h: number, depth: number, curve: number, offsetX = 0, offsetY = 0): string {
+  const d = Math.max(2, depth * h + offsetY * h);
+  const bow = curve * d * 0.85;
+  const cx = 50 + offsetX * 130;
+  return `M -8 -8 L 108 -8 L 108 ${d} Q ${cx} ${d + bow} -8 ${d} Z`;
+}

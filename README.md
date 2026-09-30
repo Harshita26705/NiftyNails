@@ -48,10 +48,23 @@ npm run dev
 The frontend proxies `/api/*` and `/media/*` to the API, so the session cookie is first-party. Set `API_URL` if the API
 isn't on `localhost:8000`.
 
+### Demo accounts
+
+`python -m app.seed --demo` also creates two deterministic demo accounts (skipped, with a warning, if
+`ENVIRONMENT=production`):
+
+| Role | Email | Password |
+|---|---|---|
+| Customer | `customer.demo@niftynails.in` | `NiftyCustomer123!` |
+| Admin | `admin.demo@niftynails.in` | `NiftyAdmin123!` |
+
+(`.in` rather than the more obvious `.local` — `.local` is a reserved/special-use TLD that the API's own email
+validator rejects at login.)
+
 ## Tests & quality checks
 
 ```bash
-cd backend && pytest                  # 54 unit + integration tests (SQLite in-memory)
+cd backend && pytest                  # 67 unit + integration tests (SQLite in-memory)
 cd backend && ruff check app tests
 cd frontend && npx tsc --noEmit && npx eslint src
 cd frontend && npm run build
@@ -68,17 +81,26 @@ Gift Nifty, bag, checkout (UPI / COD), order confirmation and tracking, and acco
 favourites and sizes.
 
 **Admin (`/admin`):** dashboard and analytics (sales, AOV, popular designs/charms/colours, AI→purchase conversion),
-orders with status workflow and printable production sheets, custom-design review queue, products (with image upload and
-live artwork preview), inventory, charms, colours, finishes, shapes, patterns, categories/styles/occasions/tags,
-customers and roles, AI request log, reviews moderation, gifting (add-ons and bundles), nail size table, and settings
-(pricing, storefront copy, sizing calibration).
+orders with status workflow and printable production sheets, custom-design review queue (with resolved complexity/tier
+and a per-nail element breakdown), products (with image upload and live artwork preview), inventory, charms, colours,
+finishes, shapes, patterns, categories/styles/occasions/tags, customers and roles, AI request log, reviews moderation,
+gifting (add-ons and bundles), nail size table, **pricing** (complexity weights, tiers, premium finishes, min/max
+guardrails), and settings (base pricing, storefront copy, sizing calibration).
+
+**Design Studio (`/create/draw`):** a vector, layered editor — freehand brush/eraser, shapes (circle, rect, rounded
+rect, triangle, diamond, polygon, star, heart, line), text, a fully custom gradient/ombre builder, editable French
+tips (classic/deep/micro/coloured/double/asymmetric — color, thickness, depth, curve, position, opacity), image
+upload, a Layers panel (reorder/hide/lock/duplicate/delete/rename), copy-to-all/mirror/apply-to-selected across the
+ten nails, zoom, and object-level undo/redo. Every stroke/shape/gradient/tip/text/image is a structured object
+(never a flattened bitmap) and is clipped to the nail's own outline.
 
 **Business rules enforced on the server:**
 - The catalogue is the source of truth. AI features only recommend real products and in-stock elements, and anything
   unavailable is reported with the closest alternative.
-- The server calculates every price. Custom designs are priced from admin settings, and cart lines are re-priced at
-  checkout.
-- Custom designs are stored as full configs plus a normalised bill of materials (charm × quantity × nail).
+- The server calculates every price, including custom-design complexity → tier resolution (Admin → Pricing). The
+  browser is never trusted for a final price; cart lines are re-priced at checkout.
+- Custom designs are stored as full configs (every drawn object, reproducible) plus a normalised bill of materials
+  (charm × quantity × nail).
 - Stock is decremented atomically at checkout, so it can't be oversold, and restocked on cancellation.
 - RBAC: every `/api/v1/admin/*` route requires staff/admin, and owner-only actions (pricing, roles) require admin. A test
   asserts no admin route is reachable without auth.

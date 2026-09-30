@@ -47,7 +47,7 @@ export function Sheet({ open, onClose, title, children, footer, side = "right", 
           "animate-[fade-up_0.28s_cubic-bezier(0.2,0.8,0.2,1)_both]",
           side === "right"
             ? cn("md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-full md:rounded-none md:rounded-l-[1.75rem]", widths[size])
-            : cn("md:inset-auto md:top-1/2 md:left-1/2 md:w-full md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[1.75rem]", widths[size]),
+            : cn("md:inset-auto md:top-1/2 md:left-1/2 md:w-full md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[0.75rem]", widths[size]),
         )}
       >
         <div className="mx-auto mt-2.5 h-1.5 w-10 rounded-full bg-line-strong md:hidden" />

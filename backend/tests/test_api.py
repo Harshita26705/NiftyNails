@@ -415,7 +415,11 @@ def test_staff_cannot_change_pricing(client, db):
 
 
 def test_admin_settings_validation(admin_client):
-    r = admin_client.put(f"{API}/admin/settings/pricing", json={"custom_base_paise": 89900})
+    # The pricing endpoint is a full structural PUT (tiers/weights can't be safely partial-merged).
+    pricing = admin_client.get(f"{API}/admin/settings").json()["pricing"]
+    r = admin_client.put(f"{API}/admin/settings/pricing", json={**pricing, "custom_base_paise": 89900})
     assert r.json()["custom_base_paise"] == 89900
     assert admin_client.put(f"{API}/admin/settings/pricing", json={"nope": 1}).status_code == 422
-    assert admin_client.put(f"{API}/admin/settings/pricing", json={"custom_base_paise": -5}).status_code == 422
+    assert admin_client.put(f"{API}/admin/settings/pricing", json={**pricing, "custom_base_paise": -5}).status_code == 422
+    bad_tiers = {**pricing, "tiers": [{"name": "Only", "min": 1, "max": 5, "price_paise": 1000}]}
+    assert admin_client.put(f"{API}/admin/settings/pricing", json=bad_tiers).status_code == 422

@@ -33,12 +33,12 @@ def create_design(data: DesignIn, db: DbSession, user: OptionalUser) -> DesignOu
     if user:
         db.add(SavedDesign(user_id=user.id, design_id=design.id))
         db.commit()
-    return design_to_out(design)
+    return design_to_out(design, db)
 
 
 @router.get("/{public_id}", response_model=DesignOut)
 def get_design(public_id: str, db: DbSession, user: OptionalUser) -> DesignOut:
-    return design_to_out(_visible(db, public_id, user))
+    return design_to_out(_visible(db, public_id, user), db)
 
 
 @router.put("/{public_id}", response_model=DesignOut, dependencies=[Depends(upload_limiter)])
@@ -50,7 +50,7 @@ def update_design(public_id: str, data: DesignIn, db: DbSession, user: CurrentUs
         raise HTTPException(status.HTTP_409_CONFLICT, "This design is already approved — duplicate it to make changes.")
     design = save_design(db, user_id=user.id, name=data.name, source=data.source, config=data.config,
                          brief=data.brief, submit=data.submit_for_review, existing=design)
-    return design_to_out(design)
+    return design_to_out(design, db)
 
 
 @router.post("/{public_id}/duplicate", response_model=DesignOut, status_code=201)
@@ -69,7 +69,7 @@ def duplicate_design(public_id: str, db: DbSession, user: CurrentUser) -> Design
     # Re-save through the service so the bill of materials is rebuilt and validated.
     copy = save_design(db, user_id=user.id, name=copy.name, source=copy.source,
                        config=DesignConfig.model_validate(copy.config), brief=copy.brief, submit=False, existing=copy)
-    return design_to_out(copy)
+    return design_to_out(copy, db)
 
 
 @router.delete("/{public_id}", response_model=Message)

@@ -70,7 +70,7 @@ function DescribeTab() {
   return (
     <div>
       <form onSubmit={(e) => { e.preventDefault(); run(query); }}
-        className="rounded-[1.8rem] bg-surface p-3 shadow-soft ring-1 ring-line focus-within:ring-2 focus-within:ring-pink">
+        className="rounded-[0.75rem] bg-surface p-3 shadow-soft ring-1 ring-line focus-within:ring-2 focus-within:ring-pink">
         <Textarea value={query} onChange={(e) => setQuery(e.target.value)} rows={3} maxLength={600}
           placeholder="e.g. baby pink almond nails with chrome, little bows and pearls — cute but not too flashy"
           aria-label="Describe your dream nails"
@@ -154,7 +154,7 @@ function OutfitTab() {
         <PhotoDrop preview={preview} onFile={onFile} title="Upload your outfit or inspiration"
           hint="A dress, saree, lehenga, makeup look or colour palette. Good light, outfit filling most of the frame." />
         <div className="space-y-4">
-          <div className="rounded-[1.6rem] bg-surface p-5 ring-1 ring-line">
+          <div className="rounded-[0.625rem] bg-surface p-5 ring-1 ring-line">
             <p className="flex items-center gap-2 text-sm font-semibold"><Palette className="size-4 text-pink" /> What we look at</p>
             <ul className="mt-3 grid grid-cols-2 gap-2 text-[13px] text-ink-2">
               {["Dominant colours", "Secondary colours", "Metallic accents", "Prints & embellishment", "Overall style", "Likely occasion"].map((t) => (
@@ -175,7 +175,7 @@ function OutfitTab() {
       {loading && <div className="mt-10"><LoadingGrid /></div>}
       {result && !loading && (
         <div className="mt-10 space-y-6 animate-fade-up">
-          <div className="rounded-[1.6rem] bg-surface p-5 ring-1 ring-line md:p-6">
+          <div className="rounded-[0.625rem] bg-surface p-5 ring-1 ring-line md:p-6">
             <p className="font-display text-2xl leading-snug md:text-3xl">{result.summary}</p>
             <div className="mt-5 flex h-14 overflow-hidden rounded-2xl ring-1 ring-line">
               {result.palette.map((c) => (
@@ -208,13 +208,14 @@ export function StylistClient() {
     <main className="mx-auto max-w-6xl px-5 pt-6 md:px-6 md:pt-12">
       <div className="max-w-2xl">
         <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase">
-          <Sparkles className="size-4" /> AI Nail Stylist
+          <Sparkles className="size-4" /> The Nifty Stylist
         </p>
         <h1 className="mt-2 font-display text-[38px] leading-[1.02] tracking-[-0.025em] md:text-[56px]">
-          Tell us the vibe. <em className="text-pink italic">We&apos;ll match it.</em>
+          A personal nail consultation, <em className="text-pink italic">curated for you.</em>
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
-          Describe your dream nails or show us your outfit. We only ever recommend designs we actually make.
+          Describe the vibe or show us your outfit and we&apos;ll recommend designs, colour combinations and finishing
+          touches — always from what we actually make. An optional second opinion; the Design Studio is yours either way.
         </p>
       </div>
       <Segmented className={cn("mt-7")} value={tab} onChange={setTab} options={[

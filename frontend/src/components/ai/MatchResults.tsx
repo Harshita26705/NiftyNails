@@ -28,7 +28,7 @@ export function MatchGrid({ matches, customPrompt, requestId }: { matches: Match
           ))}
         </div>
       )}
-      <div className="mt-10 flex flex-col items-center gap-3 rounded-[1.6rem] bg-blush-50 px-6 py-8 text-center ring-1 ring-line">
+      <div className="mt-10 flex flex-col items-center gap-3 rounded-[0.625rem] bg-blush-50 px-6 py-8 text-center ring-1 ring-line">
         <p className="font-display text-2xl">Not quite it?</p>
         <p className="max-w-md text-sm text-ink-2">
           Turn this into a custom design request — our designer will only use colours, finishes and charms we can

@@ -136,7 +136,7 @@ export function GiftClient() {
               <p className="font-display text-3xl tabular-nums">{money(budget * 100)}</p>
             </div>
             <input type="range" min={500} max={5000} step={100} value={budget} onChange={(e) => setBudget(Number(e.target.value))}
-              aria-label="Budget in rupees" className="mt-3 w-full accent-[#e0218a]" />
+              aria-label="Budget in rupees" className="mt-3 w-full accent-[#7a2e3a]" />
             <div className="flex justify-between text-[11.5px] text-ink-3"><span>₹500</span><span>₹5,000</span></div>
             <Textarea className="mt-5" label="Anything else? (optional)" rows={3} maxLength={800} value={about} onChange={(e) => setAbout(e.target.value)}
               placeholder="e.g. My best friend is 22, loves pink, Barbie, makeup and cute things." />
@@ -153,7 +153,7 @@ export function GiftClient() {
             {message && <p className="mt-2 text-sm text-ink-2">{message}</p>}
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {options.map((o, i) => (
-                <article key={i} className={cn("flex flex-col overflow-hidden rounded-[1.8rem] bg-surface shadow-soft ring-1 ring-line", i === 0 && "ring-2 ring-pink")}>
+                <article key={i} className={cn("flex flex-col overflow-hidden rounded-[0.75rem] bg-surface shadow-soft ring-1 ring-line", i === 0 && "ring-2 ring-pink")}>
                   {o.product && (
                     <div className="relative flex aspect-[16/10] items-center justify-center p-[6%]" style={{ background: backdropFor(o.product.art.base) }}>
                       <NailSetArt art={o.product.art} className="w-full" />

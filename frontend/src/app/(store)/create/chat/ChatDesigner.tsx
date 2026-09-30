@@ -100,7 +100,7 @@ export function ChatDesigner() {
   return (
     <div className="mx-auto flex h-[calc(100dvh-60px)] max-w-7xl flex-col md:h-[calc(100dvh-72px)] md:flex-row md:gap-8 md:px-6 md:py-6">
       {/* Conversation */}
-      <section className="flex min-h-0 flex-1 flex-col md:rounded-[2rem] md:bg-surface md:shadow-soft md:ring-1 md:ring-line">
+      <section className="flex min-h-0 flex-1 flex-col md:rounded-[0.75rem] md:bg-surface md:shadow-soft md:ring-1 md:ring-line">
         <div className="flex items-center justify-between border-b border-line px-4 py-3 md:px-6">
           <div className="flex items-center gap-3">
             <span className="flex size-10 items-center justify-center rounded-full bg-pink text-white"><Sparkles className="size-5" /></span>
@@ -186,14 +186,14 @@ export function ChatDesigner() {
 
       {/* Desktop design panel */}
       <aside className="hidden w-[400px] shrink-0 flex-col gap-4 overflow-y-auto md:flex">
-        <div className="rounded-[2rem] bg-surface p-5 shadow-soft ring-1 ring-line">
+        <div className="rounded-[0.75rem] bg-surface p-5 shadow-soft ring-1 ring-line">
           <p className="text-[11px] font-bold tracking-[0.16em] text-ink-3 uppercase">Live preview</p>
           <div className="mt-3 flex min-h-40 items-center justify-center rounded-3xl bg-blush-50 p-3">
             {design ? <DesignHands config={design} /> : <p className="px-6 text-center text-sm text-ink-3">Your design appears here as you chat.</p>}
           </div>
         </div>
         {quote && (
-          <div className="rounded-[2rem] bg-surface p-5 shadow-soft ring-1 ring-line">
+          <div className="rounded-[0.75rem] bg-surface p-5 shadow-soft ring-1 ring-line">
             <p className="mb-3 text-[11px] font-bold tracking-[0.16em] text-ink-3 uppercase">Price</p>
             <QuoteBreakdown quote={quote} />
             {charms.length > 0 && (

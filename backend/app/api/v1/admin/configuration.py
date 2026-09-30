@@ -3,7 +3,7 @@
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
@@ -242,8 +242,62 @@ def all_settings(db: DbSession, _: AdminUser) -> dict:
     return {key: get_setting(db, key) for key in DEFAULTS}
 
 
+class PricingTierIn(BaseModel):
+    name: str = Field(min_length=1, max_length=40)
+    min: int = Field(ge=0, le=1000)
+    max: int = Field(ge=0, le=1000)
+    price_paise: int = Field(ge=0, le=100_000_000)
+
+
+class PricingSettingIn(BaseModel):
+    custom_base_paise: int = Field(ge=0, le=100_000_000)
+    painted_nail_paise: int = Field(ge=0, le=10_000_000)
+    length_surcharge_paise: dict[str, int]
+    custom_fit_surcharge_paise: int = Field(ge=0, le=10_000_000)
+    shipping_flat_paise: int = Field(ge=0, le=10_000_000)
+    free_shipping_over_paise: int = Field(ge=0, le=100_000_000)
+    cod_fee_paise: int = Field(ge=0, le=10_000_000)
+    custom_lead_days: int = Field(ge=0, le=90)
+    ready_lead_days: int = Field(ge=0, le=90)
+    complexity_weights: dict[str, int]
+    tiers: list[PricingTierIn] = Field(min_length=1, max_length=12)
+    premium_finishes: dict[str, int]
+    min_price_paise: int = Field(ge=0, le=100_000_000)
+    max_price_paise: int = Field(ge=0, le=100_000_000)
+
+    @field_validator("length_surcharge_paise", "complexity_weights", "premium_finishes")
+    @classmethod
+    def _non_negative_values(cls, v: dict[str, int]) -> dict[str, int]:
+        for key, amount in v.items():
+            if amount < 0:
+                raise ValueError(f"{key} can't be negative.")
+        return v
+
+    @field_validator("tiers")
+    @classmethod
+    def _tiers_ordered_and_covering(cls, tiers: list[PricingTierIn]) -> list[PricingTierIn]:
+        ordered = sorted(tiers, key=lambda t: t.min)
+        if ordered[0].min != 0:
+            raise ValueError("The first pricing tier must start at complexity 0.")
+        for a, b in zip(ordered, ordered[1:], strict=False):
+            if a.max < a.min:
+                raise ValueError(f"Tier '{a.name}' has a max below its min.")
+            if b.min != a.max + 1:
+                raise ValueError(f"Tiers '{a.name}' and '{b.name}' must be contiguous (no gaps or overlaps).")
+        return ordered
+
+    def model_post_init(self, __context) -> None:
+        if self.min_price_paise > self.max_price_paise:
+            raise ValueError("min_price_paise can't be greater than max_price_paise.")
+
+
+@router.put("/settings/pricing", tags=["admin:settings"])
+def update_pricing_setting(value: PricingSettingIn, db: DbSession, _: OwnerUser) -> dict:
+    return set_setting(db, "pricing", value.model_dump())
+
+
 @router.put("/settings/{key}", tags=["admin:settings"])
-def update_setting(key: Literal["pricing", "site", "sizing"], value: dict, db: DbSession, _: OwnerUser) -> dict:
+def update_setting(key: Literal["site", "sizing"], value: dict, db: DbSession, _: OwnerUser) -> dict:
     current = get_setting(db, key)
     unknown = set(value) - set(DEFAULTS[key])
     if unknown:

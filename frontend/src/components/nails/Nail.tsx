@@ -1,7 +1,8 @@
 import { useId } from "react";
 import { darken, hashString, isDark, lighten, mix, paintFor, seeded } from "@/lib/colour";
+import type { DesignObject } from "@/lib/types";
 import { CharmArt } from "./charms";
-import { NAIL_WIDTH, nailHeight, nailPath } from "./shapes";
+import { frenchTipPath, heartPathAt, NAIL_WIDTH, nailHeight, nailPath, shapeGeometry } from "./shapes";
 
 export type NailCharm = { kind: string; x: number; y: number; scale?: number; rotation?: number };
 
@@ -15,9 +16,11 @@ export type NailSpec = {
   accent2?: string | null;
   charms?: NailCharm[];
   paintUrl?: string | null;
+  objects?: DesignObject[];
 };
 
 const W = NAIL_WIDTH;
+const TEXT_ANCHOR = { left: "start", center: "middle", right: "end" } as const;
 
 /** One nail as an SVG <g> in nail coordinates (width 100, height by length). Compose several in one <svg>. */
 export function NailGroup({ spec, shadow = true }: { spec: NailSpec; shadow?: boolean }) {
@@ -88,6 +91,8 @@ export function NailGroup({ spec, shadow = true }: { spec: NailSpec; shadow?: bo
           <image href={spec.paintUrl} x={0} y={0} width={W} height={h} preserveAspectRatio="none" />
         )}
 
+        {spec.objects && spec.objects.length > 0 && <Objects list={spec.objects} h={h} uid={uid} />}
+
         {finish === "glitter" && <Glitter h={h} base={base} seed={seed} />}
         {finish === "glazed" && (
           <>
@@ -139,9 +144,7 @@ function Glitter({ h, base, seed }: { h: number; base: string; seed: number }) {
   );
 }
 
-function heartPath(x: number, y: number, s: number) {
-  return `M ${x} ${y + 6 * s} C ${x - 8 * s} ${y + 1 * s} ${x - 8 * s} ${y - 6 * s} ${x - 3.5 * s} ${y - 6 * s} C ${x - 1.5 * s} ${y - 6 * s} ${x} ${y - 4.5 * s} ${x} ${y - 3.5 * s} C ${x} ${y - 4.5 * s} ${x + 1.5 * s} ${y - 6 * s} ${x + 3.5 * s} ${y - 6 * s} C ${x + 8 * s} ${y - 6 * s} ${x + 8 * s} ${y + 1 * s} ${x} ${y + 6 * s} Z`;
-}
+const heartPath = heartPathAt;
 
 function Pattern({ kind, h, base, accent, accent2, uid, seed }: {
   kind?: string | null; h: number; base: string; accent: string; accent2: string; uid: string; seed: number;
@@ -172,7 +175,7 @@ function Pattern({ kind, h, base, accent, accent2, uid, seed }: {
     }
     case "hearts":
       return (
-        <g fill={isDark(accent) ? accent : mix(accent, "#e0218a", 0.85)}>
+        <g fill={isDark(accent) ? accent : mix(accent, "#7a2e3a", 0.85)}>
           <path d={heartPath(36, h * 0.28, 2.3)} />
           <path d={heartPath(66, h * 0.52, 1.8)} />
           <path d={heartPath(38, h * 0.74, 1.4)} />
@@ -248,4 +251,99 @@ function Pattern({ kind, h, base, accent, accent2, uid, seed }: {
     default:
       return null;
   }
+}
+
+/** Catmull-Rom → cubic-bezier smoothing so a hand-drawn point array reads as a smooth stroke, not a polyline. */
+function smoothPath(points: { x: number; y: number }[], w: number, h: number): string {
+  const p = points.map((pt) => [pt.x * w, pt.y * h] as const);
+  if (p.length < 2) return "";
+  if (p.length === 2) return `M ${p[0][0]} ${p[0][1]} L ${p[1][0]} ${p[1][1]}`;
+  let d = `M ${p[0][0]} ${p[0][1]}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] ?? p[i];
+    const p1 = p[i];
+    const p2 = p[i + 1];
+    const p3 = p[i + 2] ?? p2;
+    const c1: [number, number] = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2: [number, number] = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${p2[0]} ${p2[1]}`;
+  }
+  return d;
+}
+
+/**
+ * Design-studio objects (strokes/shapes/text/gradients/French tips) — rendered in array order, inside the
+ * nail's own clipPath (set by the caller), so nothing a customer draws can visually leave the nail.
+ */
+function Objects({ list, h, uid }: { list: DesignObject[]; h: number; uid: string }) {
+  return (
+    <>
+      {list.filter((o) => !o.hidden).map((o) => {
+        switch (o.type) {
+          case "stroke":
+            return (
+              <path key={o.id} d={smoothPath(o.points, W, h)} fill="none" stroke={o.color} strokeWidth={o.width}
+                strokeOpacity={o.opacity} strokeLinecap={o.brush === "flat" ? "butt" : "round"} strokeLinejoin="round" />
+            );
+          case "shape": {
+            const geo = shapeGeometry(o.shape, o.sides);
+            return (
+              <g key={o.id} opacity={o.opacity} transform={`translate(${o.x * W} ${o.y * h}) rotate(${o.rotation}) scale(${o.scale})`}
+                fill={o.fill ?? "none"} stroke={o.stroke ?? "none"} strokeWidth={o.stroke ? o.stroke_width : 0}>
+                {geo.tag === "ellipse" && <ellipse rx={10} ry={10} />}
+                {geo.tag === "path" && <path d={geo.d} />}
+                {geo.tag === "polygon" && <polygon points={geo.points} />}
+              </g>
+            );
+          }
+          case "text":
+            return (
+              <g key={o.id} transform={`translate(${o.x * W} ${o.y * h}) rotate(${o.rotation}) scale(${o.scale})`}>
+                <text x={0} y={0} fill={o.color} fillOpacity={o.opacity} textAnchor={TEXT_ANCHOR[o.align]} dominantBaseline="middle"
+                  fontSize={o.size} fontFamily={o.font === "display" ? "var(--font-display, serif)" : "var(--font-sans, sans-serif)"}>
+                  {o.text}
+                </text>
+              </g>
+            );
+          case "gradient": {
+            const gid = `obj-grad-${uid}-${o.id}`;
+            const a = (o.angle * Math.PI) / 180;
+            const dx = Math.sin(a) / 2, dy = -Math.cos(a) / 2;
+            return (
+              <g key={o.id}>
+                <defs>
+                  <linearGradient id={gid} x1={0.5 - dx} y1={0.5 - dy} x2={0.5 + dx} y2={0.5 + dy}>
+                    {o.stops.map((s, i) => <stop key={i} offset={s.offset} stopColor={s.color} />)}
+                  </linearGradient>
+                </defs>
+                <rect x={-5} y={-5} width={W + 10} height={h + 10} fill={`url(#${gid})`} opacity={o.opacity} />
+              </g>
+            );
+          }
+          case "french_tip": {
+            // "thickness" scales how far the band extends (how bold the tip reads), independent of `depth`'s base shape.
+            const effectiveDepth = Math.min(0.65, o.depth * o.thickness);
+            const primary = frenchTipPath(h, effectiveDepth, o.curve, o.offset_x, o.offset_y);
+            const secondary = o.style === "double"
+              ? frenchTipPath(h, Math.max(0.03, effectiveDepth * 0.55), o.curve, o.offset_x, o.offset_y)
+              : null;
+            return (
+              <g key={o.id} opacity={o.opacity}>
+                <path d={primary} fill={o.color} />
+                {secondary && <path d={secondary} fill={o.secondary_color ?? "#ffffff"} />}
+              </g>
+            );
+          }
+          case "image":
+            return (
+              <image key={o.id} href={o.url} opacity={o.opacity}
+                x={o.x * W - 15 * o.scale} y={o.y * h - 15 * o.scale} width={30 * o.scale} height={30 * o.scale}
+                transform={`rotate(${o.rotation} ${o.x * W} ${o.y * h})`} preserveAspectRatio="xMidYMid meet" />
+            );
+          default:
+            return null;
+        }
+      })}
+    </>
+  );
 }

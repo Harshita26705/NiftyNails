@@ -70,6 +70,28 @@ def ensure_foundation(db: Session) -> None:
     db.commit()
 
 
+DEMO_ACCOUNTS = (
+    # ".local" is a reserved/special-use TLD (RFC 6761) that the API's own email validator rejects at login,
+    # so these use the brand's real-looking domain with a "demo" local-part instead of a ".local" one.
+    ("customer.demo@niftynails.in", "NiftyCustomer123!", RoleName.CUSTOMER, "Nifty Demo Customer"),
+    ("admin.demo@niftynails.in", "NiftyAdmin123!", RoleName.ADMIN, "Nifty Demo Admin"),
+)
+
+
+def load_demo_accounts(db: Session) -> None:
+    """Deterministic demo accounts for local/staging walkthroughs — never created in production."""
+    if get_settings().is_production:
+        log.warning("Refusing to create demo accounts: ENVIRONMENT=production")
+        return
+    roles = {r.name: r for r in db.scalars(select(Role))}
+    for email, password, role_name, full_name in DEMO_ACCOUNTS:
+        if db.scalar(select(User).where(User.email == email)):
+            continue
+        db.add(User(email=email, password_hash=hash_password(password), full_name=full_name, role_id=roles[role_name].id))
+        log.info("Created demo account %s (%s)", email, role_name)
+    db.commit()
+
+
 def load_demo(db: Session) -> None:
     if db.scalar(select(Product.id).limit(1)):
         log.info("Catalogue already has products — skipping demo data")
@@ -157,6 +179,7 @@ def main() -> None:
         ensure_foundation(db)
         if args.demo:
             load_demo(db)
+            load_demo_accounts(db)
 
 
 if __name__ == "__main__":

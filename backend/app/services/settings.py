@@ -17,10 +17,33 @@ DEFAULTS: dict[str, dict] = {
         "cod_fee_paise": 0,
         "custom_lead_days": 7,
         "ready_lead_days": 2,
+        # Design-studio complexity → tier pricing (Priority 14–18). Weight is added per matching object/effect
+        # found anywhere across the ten nails; the weighted total maps to a tier band below.
+        "complexity_weights": {
+            "gradient": 1,
+            "french_tip": 1,
+            "shape": 1,
+            "line_art": 2,       # a stroke made of few, short points (a simple line)
+            "freehand": 4,       # a stroke made of many points (an illustration)
+            "text": 1,
+            "image": 2,
+            "chrome_finish": 2,
+            "decoration_3d": 3,  # charms flagged is_3d
+        },
+        "tiers": [
+            {"name": "Essential", "min": 0, "max": 3, "price_paise": 79900},
+            {"name": "Signature", "min": 4, "max": 7, "price_paise": 89900},
+            {"name": "Atelier", "min": 8, "max": 12, "price_paise": 109900},
+            {"name": "Couture", "min": 13, "max": 18, "price_paise": 139900},
+            {"name": "Bespoke", "min": 19, "max": 999, "price_paise": 179900},
+        ],
+        "premium_finishes": {"chrome": 5000, "cat-eye": 3000, "glazed": 3000},
+        "min_price_paise": 59900,
+        "max_price_paise": 499900,
     },
     "site": {
         "announcement": "Free shipping on orders over ₹999 · Every set handmade in India",
-        "hero_title": "Nails that feel like you.",
+        "hero_title": "Your nails, considered.",
         "hero_subtitle": "Handmade press-ons, designed with you — sized by AI, finished by hand.",
         "instagram_handle": "niftynails.in",
         "support_email": "hello@niftynails.in",

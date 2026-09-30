@@ -311,10 +311,15 @@ def change_status(db: Session, order: Order, new_status: str, note: str, actor: 
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Add a tracking number before marking as shipped.")
     if new_status == OrderStatus.CANCELLED:
         _restock(db, order)
-    if new_status == OrderStatus.APPROVED:
+    # Mirror production progress onto any linked custom design so admin doesn't update both places by hand.
+    design_status = {
+        OrderStatus.APPROVED: "approved", OrderStatus.IN_PRODUCTION: "production",
+        OrderStatus.DELIVERED: "completed", OrderStatus.CANCELLED: "cancelled",
+    }.get(OrderStatus(new_status))
+    if design_status:
         for item in order.items:
-            if item.custom_design and item.custom_design.status != "approved":
-                item.custom_design.status = "approved"
+            if item.custom_design and item.custom_design.status != design_status:
+                item.custom_design.status = design_status
     order.status = new_status
     if tracking_number:
         order.tracking_number = tracking_number

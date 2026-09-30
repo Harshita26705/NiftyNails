@@ -193,7 +193,7 @@ def custom_designs(
         stmt = stmt.where(CustomDesign.status == status_filter)
     total = db.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     rows = db.scalars(stmt.order_by(CustomDesign.updated_at.desc()).offset((page - 1) * page_size).limit(page_size))
-    return Page(items=[design_to_out(d) for d in rows.unique()], total=total, page=page, page_size=page_size)
+    return Page(items=[design_to_out(d, db) for d in rows.unique()], total=total, page=page, page_size=page_size)
 
 
 @router.post("/custom-designs/{public_id}/review", response_model=DesignOut, tags=["admin:designs"])
@@ -207,7 +207,7 @@ def review_design(public_id: str, data: DesignReviewIn, db: DbSession, _: AdminU
         design.price_paise = data.price_paise
     db.commit()
     db.refresh(design)
-    return design_to_out(design)
+    return design_to_out(design, db)
 
 
 # ------------------------------------------------------------------ AI requests

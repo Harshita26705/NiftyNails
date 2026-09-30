@@ -29,10 +29,10 @@ export const isDark = (hex: string) => luminance(hex) < 0.18;
 
 /** A soft pastel backdrop derived from a design's base colour (keeps grids feeling curated). */
 export function backdropFor(hex: string): string {
-  if (isDark(hex)) return mix(hex, "#fff4f8", 0.9);
+  if (isDark(hex)) return mix(hex, "#f6f0e6", 0.9);
   // Very pale nails (milky, white, nude) need a deeper blush card so they don't disappear.
-  if (luminance(hex) > 0.7) return mix(hex, "#f3dbe5", 0.75);
-  return mix(hex, "#fffafc", 0.8);
+  if (luminance(hex) > 0.7) return mix(hex, "#e3d4b8", 0.75);
+  return mix(hex, "#faf6ef", 0.8);
 }
 
 const METALLIC_FILLS: Record<string, string> = {

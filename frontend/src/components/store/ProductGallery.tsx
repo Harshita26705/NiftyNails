@@ -39,7 +39,7 @@ export function ProductGallery({ product }: { product: Product }) {
     <div className="md:sticky md:top-24">
       <div className="relative -mx-5 md:mx-0">
         <div ref={scroller} onScroll={(e) => setActive(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
-          className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto md:rounded-[2rem]" aria-label="Product images">
+          className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto md:rounded-[0.75rem]" aria-label="Product images">
           {slides.map((s) => (
             <div key={s.key} className="flex aspect-square w-full shrink-0 snap-center items-center justify-center overflow-hidden" style={{ background: bg }}>
               {s.render()}

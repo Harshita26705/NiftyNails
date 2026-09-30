@@ -31,8 +31,8 @@ export default function CreatePage() {
       </div>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2 md:gap-6">
-        <Link href="/create/chat" className="group rounded-[2rem] bg-surface p-6 shadow-soft ring-1 ring-line transition hover:-translate-y-1 hover:shadow-lift md:p-8">
-          <div className="rounded-[1.5rem] bg-blush-50 py-6">
+        <Link href="/create/chat" className="group rounded-[0.75rem] bg-surface p-6 shadow-soft ring-1 ring-line transition hover:-translate-y-1 hover:shadow-lift md:p-8">
+          <div className="rounded-[0.625rem] bg-blush-50 py-6">
             <Nails specs={[
               { shape: "almond", length: "medium", base: "#F8C8D8", finish: "chrome", charms: [{ kind: "bow", x: 0.5, y: 0.45, scale: 2 }] },
               { shape: "almond", length: "medium", base: "#F8C8D8", finish: "chrome" },
@@ -50,11 +50,11 @@ export default function CreatePage() {
           <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-pink transition-all group-hover:gap-3">Start chatting <ArrowRight className="size-4" /></span>
         </Link>
 
-        <Link href="/create/draw" className="group rounded-[2rem] bg-ink p-6 text-white shadow-soft transition hover:-translate-y-1 hover:shadow-lift md:p-8">
-          <div className="rounded-[1.5rem] bg-white/[0.06] py-6">
+        <Link href="/create/draw" className="group rounded-[0.75rem] bg-ink p-6 text-white shadow-soft transition hover:-translate-y-1 hover:shadow-lift md:p-8">
+          <div className="rounded-[0.625rem] bg-white/[0.06] py-6">
             <Nails specs={[
               { shape: "coffin", length: "long", base: "#CDB8E8", pattern: "swirls", patternColour: "#FFFFFF" },
-              { shape: "coffin", length: "long", base: "#FFFFFF", pattern: "hearts", patternColour: "#E0218A" },
+              { shape: "coffin", length: "long", base: "#FFFFFF", pattern: "hearts", patternColour: "#7A2E3A" },
               { shape: "coffin", length: "long", base: "#BCD9F2", finish: "glazed", charms: [{ kind: "butterfly", x: 0.5, y: 0.45, scale: 2 }] },
             ]} />
           </div>

@@ -50,6 +50,7 @@ export function specsFromConfig(config: DesignConfig, catalog: CatalogOptions | 
       pattern: nail?.pattern ?? null,
       patternColour: colour(nail?.pattern_colour) ?? null,
       paintUrl: nail?.paint ?? null,
+      objects: nail?.objects ?? [],
       charms: (nail?.charms ?? []).map((c) => ({
         kind: charmKey(c.charm), x: c.x, y: c.y, scale: (c.scale ?? 1) * CHARM_BASE_SCALE, rotation: c.rotation,
       })),

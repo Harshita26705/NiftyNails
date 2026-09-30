@@ -14,8 +14,8 @@ function splitTitle(title: string): [string, string] {
 function Polaroid({ product, className, style }: { product: Product; className?: string; style?: React.CSSProperties }) {
   return (
     <Link href={`/shop/${product.slug}`} style={style}
-      className={`group absolute block rounded-[1.6rem] bg-white p-2 shadow-[0_24px_50px_-24px_rgb(42_15_31/0.35)] ring-1 ring-black/[0.04] transition-transform duration-500 hover:-translate-y-1 ${className}`}>
-      <div className="flex aspect-square items-center justify-center overflow-hidden rounded-[1.2rem] p-[4%]" style={{ background: backdropFor(product.art.base) }}>
+      className={`group absolute block rounded-[0.625rem] bg-white p-2 shadow-[0_24px_50px_-24px_rgb(43_36_32/0.35)] ring-1 ring-black/[0.04] transition-transform duration-500 hover:-translate-y-1 ${className}`}>
+      <div className="flex aspect-square items-center justify-center overflow-hidden rounded-[0.5rem] p-[4%]" style={{ background: backdropFor(product.art.base) }}>
         <NailSetArt art={product.art} className="w-full scale-110 transition-transform duration-500 group-hover:scale-[1.16]" title={product.name} />
       </div>
       <div className="flex items-center justify-between px-1.5 pt-2 pb-0.5">
@@ -35,16 +35,14 @@ export function Hero({ title, subtitle, products }: { title: string; subtitle: s
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 [&>*]:min-w-0 pt-8 pb-14 md:grid-cols-[1.05fr_1fr] md:gap-8 md:px-6 md:pt-16 md:pb-24">
         <div className="animate-fade-up">
-          <p className="inline-flex items-center gap-2 rounded-full bg-surface px-3.5 py-1.5 text-[12px] font-semibold text-ink-2 shadow-soft ring-1 ring-line">
-            <span className="size-1.5 rounded-full bg-pink" /> Handmade press-ons · made to order
-          </p>
-          <h1 className="mt-5 font-display text-[46px] leading-[0.98] tracking-[-0.035em] text-balance md:text-[82px]">
-            {lead} <em className="text-pink italic">{accent}</em>
+          <p className="text-[12px] font-semibold tracking-[0.32em] text-ink-3 uppercase">Nifty Nails</p>
+          <h1 className="mt-4 font-display text-[46px] leading-[0.98] tracking-[-0.035em] text-balance uppercase md:text-[80px]">
+            {lead} <em className="text-pink not-italic">{accent}</em>
           </h1>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-pretty text-ink-2 md:text-lg">{subtitle}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/shop" size="lg" icon={<ArrowRight className="order-last size-4" />}>Shop designs</ButtonLink>
-            <ButtonLink href="/create" size="lg" variant="secondary" icon={<Wand2 className="size-4 text-pink" />}>Create your own</ButtonLink>
+            <ButtonLink href="/shop" size="lg" className="tracking-[0.06em] uppercase" icon={<ArrowRight className="order-last size-4" />}>Discover the collection</ButtonLink>
+            <ButtonLink href="/create" size="lg" variant="secondary" className="tracking-[0.06em] uppercase" icon={<Wand2 className="size-4 text-pink" />}>Design your own</ButtonLink>
           </div>
           <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-line pt-6">
             {[

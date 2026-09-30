@@ -76,7 +76,7 @@ export function OrderDetail({ order, instructions }: { order: Order; instruction
     <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
       <div className="space-y-6">
         {instructions && (
-          <div className="rounded-[1.6rem] bg-champagne px-5 py-4 text-[14px] leading-relaxed">
+          <div className="rounded-[0.625rem] bg-champagne px-5 py-4 text-[14px] leading-relaxed">
             <p className="font-semibold">Payment</p>
             <p className="mt-1 text-ink-2">{instructions}</p>
           </div>

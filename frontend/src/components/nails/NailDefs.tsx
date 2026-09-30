@@ -52,7 +52,7 @@ export function NailDefs() {
         </linearGradient>
         <radialGradient id="nn-heart" cx="35%" cy="30%">
           <stop offset="0%" stopColor="#ff9cc3" />
-          <stop offset="100%" stopColor="#e0218a" />
+          <stop offset="100%" stopColor="#7a2e3a" />
         </radialGradient>
         <radialGradient id="nn-berry" cx="38%" cy="30%">
           <stop offset="0%" stopColor="#ff6b7f" />

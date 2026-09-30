@@ -5,7 +5,7 @@ import { cn, money } from "@/lib/format";
 
 type Point = { date: string; sales_paise: number; orders: number };
 
-const SERIES = "#e0218a"; // single series → one brand hue (no categorical palette needed)
+const SERIES = "#7a2e3a"; // single series → one brand hue (no categorical palette needed)
 
 function niceMax(v: number) {
   if (v <= 0) return 100000;

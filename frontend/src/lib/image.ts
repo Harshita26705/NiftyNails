@@ -23,3 +23,23 @@ export async function downscaleImage(file: File, maxSide = 1600, quality = 0.9):
   );
   return { blob, width, height, url: URL.createObjectURL(blob) };
 }
+
+/** A small PNG data URL for a Design Studio image object (a decal on the nail, not a full photo). */
+export async function imageFileToDataUrl(file: File, maxSide = 260): Promise<string> {
+  if (!file.type.startsWith("image/")) throw new Error("Please choose an image (JPG, PNG or WebP).");
+  if (file.size > 15 * 1024 * 1024) throw new Error("That image is very large — please choose one under 15 MB.");
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" }).catch(() => {
+    throw new Error("We couldn't read that image. Try a JPG or PNG.");
+  });
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+  const width = Math.round(bitmap.width * scale);
+  const height = Math.round(bitmap.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Your browser couldn't process the image.");
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+  return canvas.toDataURL("image/png");
+}

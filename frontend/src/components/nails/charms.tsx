@@ -146,9 +146,9 @@ function Teddy() {
       <circle cx={7.5} cy={-7.5} r={2} fill="#e9c3a8" />
       <circle r={10} fill="url(#nn-teddy)" stroke="#6d4633" strokeWidth={0.6} />
       <ellipse cy={3.4} rx={4.8} ry={3.6} fill="#f1d6c1" />
-      <circle cx={-3.6} cy={-1.8} r={1.1} fill="#2a0f1f" />
-      <circle cx={3.6} cy={-1.8} r={1.1} fill="#2a0f1f" />
-      <ellipse cy={2.3} rx={1.5} ry={1.1} fill="#2a0f1f" />
+      <circle cx={-3.6} cy={-1.8} r={1.1} fill="#2b2420" />
+      <circle cx={3.6} cy={-1.8} r={1.1} fill="#2b2420" />
+      <ellipse cy={2.3} rx={1.5} ry={1.1} fill="#2b2420" />
       <circle cx={-6.5} cy={2.2} r={1.4} fill="#f59bb6" opacity={0.7} />
       <circle cx={6.5} cy={2.2} r={1.4} fill="#f59bb6" opacity={0.7} />
     </g>

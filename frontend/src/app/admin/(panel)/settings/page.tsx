@@ -8,7 +8,13 @@ import { useToast } from "@/components/ui/Toast";
 import { api, ApiError } from "@/lib/api";
 
 type Settings = {
-  pricing: { custom_base_paise: number; painted_nail_paise: number; length_surcharge_paise: Record<string, number>; custom_fit_surcharge_paise: number; shipping_flat_paise: number; free_shipping_over_paise: number; cod_fee_paise: number; custom_lead_days: number; ready_lead_days: number };
+  pricing: {
+    custom_base_paise: number; painted_nail_paise: number; length_surcharge_paise: Record<string, number>;
+    custom_fit_surcharge_paise: number; shipping_flat_paise: number; free_shipping_over_paise: number;
+    cod_fee_paise: number; custom_lead_days: number; ready_lead_days: number;
+    complexity_weights: Record<string, number>; tiers: { name: string; min: number; max: number; price_paise: number }[];
+    premium_finishes: Record<string, number>; min_price_paise: number; max_price_paise: number;
+  };
   site: { announcement: string; hero_title: string; hero_subtitle: string; instagram_handle: string; support_email: string; whatsapp: string; upi_id: string };
   sizing: { nail_to_finger_ratio: Record<string, number>; min_confidence: number; prefer_larger_between_sizes: boolean };
 };

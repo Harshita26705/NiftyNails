@@ -52,7 +52,7 @@ def reorder(number: str, user: CurrentUser, db: DbSession) -> dict:
 def my_designs(user: CurrentUser, db: DbSession) -> list[DesignOut]:
     saved = db.scalars(select(SavedDesign).where(SavedDesign.user_id == user.id)
                        .order_by(SavedDesign.created_at.desc()))
-    return [design_to_out(s.design) for s in saved]
+    return [design_to_out(s.design, db) for s in saved]
 
 
 @router.get("/favourites", response_model=list[ProductOut])

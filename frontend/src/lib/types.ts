@@ -177,6 +177,38 @@ export type SizingResult = {
 };
 
 export type CharmPlacement = { charm: string; x: number; y: number; scale: number; rotation: number };
+
+// ---------------------------------------------------------------- design studio objects (strokes/shapes/text/
+// gradients/French tips). Structured and editable, clipped to the nail outline — never flattened to a bitmap.
+
+export type ObjectBase = { id: string; name: string; hidden: boolean; locked: boolean; opacity: number };
+export type Point = { x: number; y: number };
+
+export type StrokeObject = ObjectBase & {
+  type: "stroke"; points: Point[]; width: number; color: string; brush: "round" | "flat" | "marker";
+};
+export type ShapeKind = "circle" | "rect" | "rounded_rect" | "triangle" | "polygon" | "star" | "heart" | "diamond" | "line";
+export type ShapeObject = ObjectBase & {
+  type: "shape"; shape: ShapeKind; x: number; y: number; scale: number; rotation: number;
+  fill: string | null; stroke: string | null; stroke_width: number; sides: number;
+};
+export type TextObject = ObjectBase & {
+  type: "text"; x: number; y: number; scale: number; rotation: number; text: string;
+  font: "display" | "sans"; size: number; color: string; align: "left" | "center" | "right";
+};
+export type GradientStop = { color: string; offset: number };
+export type GradientObject = ObjectBase & { type: "gradient"; stops: GradientStop[]; angle: number };
+export type FrenchTipStyle = "classic" | "deep" | "micro" | "colored" | "double" | "asymmetric";
+export type FrenchTipObject = ObjectBase & {
+  type: "french_tip"; style: FrenchTipStyle; color: string; secondary_color: string | null;
+  depth: number; curve: number; thickness: number; offset_x: number; offset_y: number;
+};
+export type ImageObject = ObjectBase & {
+  type: "image"; x: number; y: number; scale: number; rotation: number; url: string;
+};
+export type DesignObject = StrokeObject | ShapeObject | TextObject | GradientObject | FrenchTipObject | ImageObject;
+export type DesignObjectType = DesignObject["type"];
+
 export type NailConfig = {
   colour?: string | null;
   finish?: string | null;
@@ -184,6 +216,7 @@ export type NailConfig = {
   pattern_colour?: string | null;
   paint?: string | null;
   charms: CharmPlacement[];
+  objects: DesignObject[];
 };
 export type NailKey = "L1" | "L2" | "L3" | "L4" | "L5" | "R1" | "R2" | "R3" | "R4" | "R5";
 export const NAIL_KEYS: NailKey[] = ["L1", "L2", "L3", "L4", "L5", "R1", "R2", "R3", "R4", "R5"];
@@ -212,14 +245,19 @@ export type DesignQuote = {
   bill_of_materials: BomLine[];
   warnings: string[];
   manufacturable: boolean;
+  complexity: number;
+  tier: string;
 };
+
+export type DesignStatus =
+  | "draft" | "submitted" | "in_review" | "approved" | "rejected" | "production" | "completed" | "cancelled";
 
 export type Design = {
   id: number;
   public_id: string;
   name: string;
   source: "chat" | "draw" | "stylist";
-  status: "draft" | "submitted" | "in_review" | "approved" | "rejected";
+  status: DesignStatus;
   config: DesignConfig;
   brief: string;
   price_paise: number;
@@ -227,6 +265,8 @@ export type Design = {
   created_at: string;
   updated_at: string;
   bill_of_materials: BomLine[];
+  complexity: number;
+  tier: string;
 };
 
 export type ChatState = Record<string, unknown>;

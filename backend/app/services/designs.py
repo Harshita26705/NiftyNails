@@ -42,10 +42,56 @@ class DesignAnalysis:
     bom: list[BomLine]
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    complexity: int = 0
+    tier: str = "Essential"
 
     @property
     def price_paise(self) -> int:
         return sum(line.amount_paise for line in self.breakdown)
+
+
+LINE_ART_POINTS = 8  # strokes with this many points or fewer read as a simple line, not an illustration
+
+
+def compute_complexity(config: DesignConfig, cat: Catalogue, weights: dict) -> int:
+    """Sum configured weights for every complexity-bearing element across all ten nails."""
+    score = 0
+    chrome_finishes_seen: set[str] = set()
+    for key in NAIL_KEYS:
+        nail = config.nails.get(key)
+        if not nail:
+            continue
+        finish = nail.finish
+        if finish == "chrome" and key not in chrome_finishes_seen:
+            chrome_finishes_seen.add(key)
+            score += weights.get("chrome_finish", 0)
+        for obj in nail.objects:
+            if obj.type == "gradient":
+                score += weights.get("gradient", 0)
+            elif obj.type == "french_tip":
+                score += weights.get("french_tip", 0)
+            elif obj.type == "shape":
+                score += weights.get("shape", 0)
+            elif obj.type == "text":
+                score += weights.get("text", 0)
+            elif obj.type == "image":
+                score += weights.get("image", 0)
+            elif obj.type == "stroke":
+                key_name = "line_art" if len(obj.points) <= LINE_ART_POINTS else "freehand"
+                score += weights.get(key_name, 0)
+        for placement in nail.charms:
+            charm = cat.charms.get(placement.charm)
+            if charm and charm.is_3d:
+                score += weights.get("decoration_3d", 0)
+    return score
+
+
+def resolve_tier(complexity: int, tiers: list[dict]) -> dict:
+    for tier in tiers:
+        if tier["min"] <= complexity <= tier["max"]:
+            return tier
+    # Complexity above every configured band falls into the highest tier rather than pricing at 0.
+    return max(tiers, key=lambda t: t["max"]) if tiers else {"name": "Essential", "price_paise": 0}
 
 
 def analyse_design(db: Session, config: DesignConfig, sets: int = 1, catalogue: Catalogue | None = None) -> DesignAnalysis:
@@ -118,7 +164,10 @@ def analyse_design(db: Session, config: DesignConfig, sets: int = 1, catalogue: 
         bom.append(BomLine(element_type="pattern", slug=slug, name=p.name, quantity=len(keys), nail_positions=keys,
                            unit_cost_paise=p.surcharge_paise))
 
-    breakdown = [PriceLine(label="Custom handmade set (10 nails)", amount_paise=pricing["custom_base_paise"])]
+    complexity = compute_complexity(config, cat, pricing["complexity_weights"])
+    tier = resolve_tier(complexity, pricing["tiers"])
+
+    breakdown = [PriceLine(label=f"Custom handmade set (10 nails) · {tier['name']}", amount_paise=tier["price_paise"])]
     if shape and shape.surcharge_paise:
         breakdown.append(PriceLine(label=f"{shape.name} shape", amount_paise=shape.surcharge_paise))
     length_fee = pricing["length_surcharge_paise"].get(config.length, 0)
@@ -128,6 +177,9 @@ def analyse_design(db: Session, config: DesignConfig, sets: int = 1, catalogue: 
         if cat.finishes[slug].surcharge_paise:
             breakdown.append(PriceLine(label=f"{cat.finishes[slug].name} finish",
                                        amount_paise=cat.finishes[slug].surcharge_paise))
+        premium_fee = pricing["premium_finishes"].get(slug, 0)
+        if premium_fee:
+            breakdown.append(PriceLine(label=f"{cat.finishes[slug].name} premium finish", amount_paise=premium_fee))
     for slug in patterns_used:
         if cat.patterns[slug].surcharge_paise:
             breakdown.append(PriceLine(label=f"{cat.patterns[slug].name} art",
@@ -140,12 +192,18 @@ def analyse_design(db: Session, config: DesignConfig, sets: int = 1, catalogue: 
             breakdown.append(PriceLine(label=f"{line.name} × {line.quantity}",
                                        amount_paise=line.unit_cost_paise * line.quantity))
 
+    raw_total = sum(line.amount_paise for line in breakdown)
+    clamped = min(max(raw_total, pricing["min_price_paise"]), pricing["max_price_paise"])
+    if clamped != raw_total:
+        breakdown.append(PriceLine(label="Pricing adjustment", amount_paise=clamped - raw_total))
+
     total_charms = sum(len(v) for v in charms_used.values())
     if total_charms > 30:
         warnings.append("That's a lot of charms — our artist may suggest trimming a few so the set stays wearable.")
     if config.length == "xlong" and shape and shape.svg_key == "square":
         warnings.append("Extra-long square nails are more prone to snapping; coffin is a sturdier alternative.")
-    return DesignAnalysis(breakdown=breakdown, bom=bom, warnings=warnings, errors=list(dict.fromkeys(errors)))
+    return DesignAnalysis(breakdown=breakdown, bom=bom, warnings=warnings, errors=list(dict.fromkeys(errors)),
+                          complexity=complexity, tier=tier["name"])
 
 
 def quote(db: Session, config: DesignConfig) -> DesignQuoteOut:
@@ -156,6 +214,8 @@ def quote(db: Session, config: DesignConfig) -> DesignQuoteOut:
         bill_of_materials=a.bom,
         warnings=a.warnings + a.errors,
         manufacturable=not a.errors,
+        complexity=a.complexity,
+        tier=a.tier,
     )
 
 
@@ -166,6 +226,13 @@ def _persist_paint_layers(config: DesignConfig) -> DesignConfig:
             nail.paint = storage.save(decode_png_data_url(nail.paint), "paint", fmt="PNG")
         elif nail.paint and not nail.paint.startswith("/media/paint/"):
             nail.paint = None  # never accept arbitrary external URLs
+        for obj in nail.objects:
+            if obj.type != "image":
+                continue
+            if obj.url.startswith("data:"):
+                obj.url = storage.save(decode_png_data_url(obj.url), "paint", fmt="PNG")
+            elif not obj.url.startswith("/media/paint/"):
+                obj.url = ""  # never accept arbitrary external URLs
     return config
 
 
@@ -227,7 +294,7 @@ def save_design(
     return design
 
 
-def design_to_out(design: CustomDesign) -> DesignOut:
+def design_to_out(design: CustomDesign, db: Session) -> DesignOut:
     out = DesignOut.model_validate(design)
     out.bill_of_materials = [
         BomLine(
@@ -240,6 +307,15 @@ def design_to_out(design: CustomDesign) -> DesignOut:
         )
         for e in design.elements
     ]
+    # Informational only (uses *current* pricing config) — the authoritative price is `price_paise`, set at save time.
+    try:
+        pricing = get_setting(db, "pricing")
+        cat = Catalogue.load(db)
+        complexity = compute_complexity(DesignConfig.model_validate(design.config), cat, pricing["complexity_weights"])
+        out.complexity = complexity
+        out.tier = resolve_tier(complexity, pricing["tiers"])["name"]
+    except Exception:  # noqa: BLE001 — a design saved under an older config shape shouldn't break the response
+        pass
     return out
 
 

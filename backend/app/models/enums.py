@@ -49,7 +49,10 @@ class DesignStatus(StrEnum):
     SUBMITTED = "submitted"
     IN_REVIEW = "in_review"
     APPROVED = "approved"
-    REJECTED = "rejected"
+    REJECTED = "rejected"  # shown to customers/admin as "Needs changes"
+    PRODUCTION = "production"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
 
 
 class DesignElementType(StrEnum):

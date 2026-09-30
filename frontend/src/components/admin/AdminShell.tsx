@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BarChart3, Bot, Boxes, ExternalLink, Gem, Gift, LayoutDashboard, LogOut, Menu, MessageSquareHeart, Package, Palette,
-  Ruler, Settings, Shapes, ShoppingBag, Sparkles, Store, Tags, Users, Wand2,
+  BarChart3, Bot, Boxes, Coins, ExternalLink, Gem, Gift, LayoutDashboard, LogOut, Menu, MessageSquareHeart, Package,
+  Palette, Ruler, Settings, Shapes, ShoppingBag, Sparkles, Store, Tags, Users, Wand2,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ const NAV = [
   { group: "Sales", items: [
     { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
     { href: "/admin/designs", label: "Custom designs", icon: Wand2 },
+    { href: "/admin/pricing", label: "Pricing", icon: Coins },
     { href: "/admin/customers", label: "Customers", icon: Users },
     { href: "/admin/ai-requests", label: "AI requests", icon: Bot },
     { href: "/admin/reviews", label: "Reviews", icon: MessageSquareHeart },
@@ -85,7 +86,7 @@ export function AdminShell({ user, children }: { user: User; children: React.Rea
   };
 
   return (
-    <div className="min-h-dvh bg-[#fbf7f9]">
+    <div className="min-h-dvh bg-paper">
       <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-line bg-surface px-3 py-5 lg:flex">
         <div className="flex items-center justify-between px-3"><Logo href="/admin" /><span className="rounded-full bg-ink px-2 py-0.5 text-[9px] font-bold tracking-widest text-white">ADMIN</span></div>
         <div className="mt-7 flex-1 overflow-y-auto"><Nav /></div>

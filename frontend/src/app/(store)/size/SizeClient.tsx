@@ -185,7 +185,7 @@ export function SizeClient() {
 
       {result && banner && (
         <section ref={resultRef} className="mt-12 scroll-mt-24 animate-fade-up">
-          <div className={cn("flex gap-3 rounded-[1.6rem] px-5 py-4", banner.tone)}>
+          <div className={cn("flex gap-3 rounded-[0.625rem] px-5 py-4", banner.tone)}>
             <banner.icon className="mt-0.5 size-5 shrink-0" />
             <div>
               <p className="font-semibold">{banner.title}</p>

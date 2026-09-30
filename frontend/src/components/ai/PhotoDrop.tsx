@@ -27,7 +27,7 @@ export function PhotoDrop({ preview, onFile, title, hint, capture, className, ch
         if (f) onFile(f);
       }}
       className={cn(
-        "relative overflow-hidden rounded-[1.8rem] border-2 border-dashed transition",
+        "relative overflow-hidden rounded-[0.75rem] border-2 border-dashed transition",
         drag ? "border-pink bg-blush-100" : "border-line-strong bg-surface",
         preview && "border-solid border-transparent",
         className,
@@ -39,7 +39,7 @@ export function PhotoDrop({ preview, onFile, title, hint, capture, className, ch
       {preview ? (
         <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="Your upload" className="max-h-[420px] w-full rounded-[1.6rem] object-contain" />
+          <img src={preview} alt="Your upload" className="max-h-[420px] w-full rounded-[0.625rem] object-contain" />
           {children}
           <button type="button" onClick={() => input.current?.click()}
             className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-semibold shadow backdrop-blur">
