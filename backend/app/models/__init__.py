@@ -1,0 +1,65 @@
+"""Import every model so Base.metadata is complete (Alembic autogenerate, create_all in tests)."""
+
+from app.models.catalog import (
+    Category,
+    Charm,
+    Colour,
+    Favourite,
+    Finish,
+    Inventory,
+    NailShape,
+    NailSize,
+    Occasion,
+    Pattern,
+    Product,
+    ProductCharm,
+    ProductColour,
+    ProductEmbedding,
+    ProductImage,
+    Review,
+    SizeKit,
+    Style,
+    Tag,
+)
+from app.models.design import CustomDesign, CustomDesignElement, SavedDesign
+from app.models.gifting import GiftBundle, GiftBundleItem, GiftItem
+from app.models.order import Order, OrderCustomization, OrderItem, OrderStatusEvent
+from app.models.system import AIRequest, SiteSetting
+from app.models.user import NailMeasurement, Role, User
+
+__all__ = [
+    "AIRequest",
+    "Category",
+    "Charm",
+    "Colour",
+    "CustomDesign",
+    "CustomDesignElement",
+    "Favourite",
+    "Finish",
+    "GiftBundle",
+    "GiftBundleItem",
+    "GiftItem",
+    "Inventory",
+    "NailMeasurement",
+    "NailShape",
+    "NailSize",
+    "Occasion",
+    "Order",
+    "OrderCustomization",
+    "OrderItem",
+    "OrderStatusEvent",
+    "Pattern",
+    "Product",
+    "ProductCharm",
+    "ProductColour",
+    "ProductEmbedding",
+    "ProductImage",
+    "Review",
+    "Role",
+    "SavedDesign",
+    "SiteSetting",
+    "SizeKit",
+    "Style",
+    "Tag",
+    "User",
+]

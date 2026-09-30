@@ -1,0 +1,20 @@
+// Upload a hand photo on /size and run the measurement. Usage: node scripts/e2e-size.mjs <image> [width]
+import { chromium } from "@playwright/test";
+const [image, w = "390"] = process.argv.slice(2);
+const width = Number(w);
+const out = process.env.SHOT_DIR ?? "shots";
+const b = await chromium.launch();
+const page = await b.newPage({ viewport: { width, height: width < 800 ? 844 : 900 }, deviceScaleFactor: 2 });
+const errors = [];
+page.on("pageerror", (e) => errors.push(e.message));
+await page.goto((process.env.BASE_URL ?? "http://localhost:3100") + "/size", { waitUntil: "load" });
+await page.setInputFiles('input[type="file"]', image);
+await page.waitForSelector("text=/Hand found|Hand not clear/", { timeout: 90000 });
+const hand = await page.locator("text=/Hand found|Hand not clear/").first().innerText();
+await page.click("text=Measure my nails");
+await page.waitForSelector("text=/Your Nifty sizes/", { timeout: 90000 });
+await page.waitForTimeout(1200);
+await page.screenshot({ path: `${out}/size-${width}-result.png`, fullPage: false });
+const sizes = await page.locator("section >> text=/confident|Looking good|Fairly/").first().innerText().catch(() => "");
+console.log(JSON.stringify({ hand, banner: sizes.slice(0, 80), errors }));
+await b.close();
