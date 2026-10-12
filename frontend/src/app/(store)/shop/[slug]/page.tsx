@@ -66,7 +66,7 @@ export default async function ProductPage({ params }: Props) {
             {product.category && <Link href={`/shop?category=${product.category.slug}`}><Tag>{product.category.name}</Tag></Link>}
             {product.tags.map((t) => <Tag key={t.slug} tone="cream">{t.name}</Tag>)}
           </div>
-          <h1 className="mt-3 font-display text-[38px] leading-[1.02] tracking-[-0.025em] md:text-[52px]">{product.name}</h1>
+          <h1 className="mt-3 font-display text-[44px] leading-[1.0] uppercase md:text-[60px]">{product.name}</h1>
           <div className="mt-3 flex items-center gap-3">
             <Price paise={product.price_paise} compareAt={product.compare_at_paise} size="lg" />
             {product.rating_count > 0 && (

@@ -9,7 +9,16 @@ from app.api.deps import DbSession, OptionalUser
 from app.core.config import get_settings
 from app.core.rate_limit import ai_limiter
 from app.ml.sizing import REFERENCE_OBJECTS, hand_from_normalised
-from app.schemas.ai import GiftOut, GiftRequestIn, ReferenceOptionOut, SearchIn, SearchOut, SizingOut, StylistOut
+from app.schemas.ai import (
+    ColorAnalysisOut,
+    GiftOut,
+    GiftRequestIn,
+    ReferenceOptionOut,
+    SearchIn,
+    SearchOut,
+    SizingOut,
+    StylistOut,
+)
 from app.services import ai as ai_service
 from app.services.design_chat import ChatTurnIn, ChatTurnOut, DesignChat
 from app.services.gifting import recommend_gifts
@@ -38,6 +47,16 @@ def outfit_stylist(
 ) -> StylistOut:
     rgb = to_rgb_array(_read_image(image), max_side=900)
     return ai_service.stylist(db, rgb, note, user.id if user else None)
+
+
+@router.post("/color-analysis", response_model=ColorAnalysisOut)
+def color_analysis(
+    db: DbSession,
+    user: OptionalUser,
+    image: Annotated[UploadFile, File(description="A selfie (face or hand) in good, even light")],
+) -> ColorAnalysisOut:
+    rgb = to_rgb_array(_read_image(image), max_side=900)
+    return ai_service.color_analysis(db, rgb, user.id if user else None)
 
 
 @router.post("/design-chat", response_model=ChatTurnOut)

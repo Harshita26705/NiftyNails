@@ -32,7 +32,7 @@ export default function TrackPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pt-8 md:px-6 md:pt-12">
-      <h1 className="font-display text-[38px] leading-none tracking-[-0.02em] md:text-[52px]">Track your <em className="text-pink italic">order</em></h1>
+      <h1 className="font-display text-[44px] leading-none uppercase md:text-[66px]">Track your <em className="font-normal text-pink italic normal-case">order</em></h1>
       <Card className="mt-6 max-w-xl">
         <form onSubmit={track} className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
           <Input label="Order number" placeholder="NN-260925-AB12C" value={number} onChange={(e) => setNumber(e.target.value)} required />

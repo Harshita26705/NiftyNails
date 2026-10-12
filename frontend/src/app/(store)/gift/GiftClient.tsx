@@ -107,9 +107,9 @@ export function GiftClient() {
   return (
     <main className="mx-auto max-w-6xl px-5 pt-6 md:px-6 md:pt-12">
       <div className="max-w-2xl">
-        <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase"><Gift className="size-4" /> Gift Nifty</p>
+        <p className="inline-flex items-center gap-2 eyebrow"><Gift className="size-4" /> Gift Nifty</p>
         <h1 className="mt-2 font-display text-[38px] leading-[1.02] tracking-[-0.025em] md:text-[56px]">
-          Tell us about them. <em className="text-pink italic">We&apos;ll wrap it up.</em>
+          Tell us about them. <em className="font-normal text-pink italic normal-case">We&apos;ll wrap it up.</em>
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-2">A few taps and we&apos;ll build a gift from things we actually make — always within your budget.</p>
       </div>
@@ -149,7 +149,7 @@ export function GiftClient() {
       <div ref={results} className="scroll-mt-24">
         {options && (
           <section className="mt-12 animate-fade-up">
-            <h2 className="font-display text-3xl md:text-4xl">{options.length ? <>Gift ideas <em className="text-pink italic">for {who.toLowerCase()}</em></> : "Hmm…"}</h2>
+            <h2 className="font-display text-3xl md:text-4xl">{options.length ? <>Gift ideas <em className="font-normal text-pink italic normal-case">for {who.toLowerCase()}</em></> : "Hmm…"}</h2>
             {message && <p className="mt-2 text-sm text-ink-2">{message}</p>}
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {options.map((o, i) => (

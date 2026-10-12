@@ -1,0 +1,20 @@
+
+> frontend@0.1.0 dev
+> next dev -p 3100
+
+▲ Next.js 16.3.6 (Turbopack)
+- Local:         http://localhost:3100
+- Network:       http://172.20.176.1:3100
+✓ Ready in 9.0s
+✓ Running next.config.ts took 514ms
+
+○ Compiling / ...
+ GET / 200 in 12.3s (next.js: 7.4s, application-code: 4.9s)
+ GET /shop 200 in 1051ms (next.js: 125ms, application-code: 926ms)
+ GET / 200 in 1346ms (next.js: 347ms, application-code: 999ms)
+ GET / 200 in 1910ms (next.js: 27ms, application-code: 1882ms)
+ GET /create 200 in 501ms (next.js: 367ms, application-code: 135ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /create/draw 200 in 405ms (next.js: 296ms, application-code: 109ms)
+[browser] W1009 10:55:02.136000 2196592 gl_context.cc:1119] OpenGL error checking is disabled (src/lib/handDetect.ts:37:5)
+ GET / 200 in 3.9s (next.js: 804ms, application-code: 3.1s)

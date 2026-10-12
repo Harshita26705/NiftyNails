@@ -9,10 +9,10 @@ export function Chip({ selected, swatch, icon, className, children, ...rest }:
       type="button"
       aria-pressed={selected}
       className={cn(
-        "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-4 text-[13px] font-medium transition-all duration-150 active:scale-[0.97]",
+        "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-[2px] px-4 text-[13px] font-medium tracking-[0.02em] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.97]",
         selected
-          ? "bg-ink text-white shadow-sm"
-          : "bg-surface text-ink ring-1 ring-inset ring-line hover:ring-line-strong hover:bg-blush-50",
+          ? "bg-ink text-paper"
+          : "bg-surface text-ink ring-1 ring-inset ring-line hover:ring-ink/40 hover:bg-blush-50",
         className,
       )}
       {...rest}
@@ -37,12 +37,12 @@ export function Tag({ children, tone = "blush", className }: {
     ink: "bg-ink text-white",
     mint: "bg-mint text-success",
     cream: "bg-champagne text-ink-2",
-    warning: "bg-[#fff1d6] text-warning",
+    warning: "bg-champagne text-warning",
     danger: "bg-danger/10 text-danger",
     white: "bg-white/90 text-ink backdrop-blur",
   };
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide", tones[tone], className)}>
+    <span className={cn("inline-flex items-center gap-1 rounded-[2px] px-2.5 py-1 text-[10.5px] font-medium tracking-[0.14em] uppercase", tones[tone], className)}>
       {children}
     </span>
   );

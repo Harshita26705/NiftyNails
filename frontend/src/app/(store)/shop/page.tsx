@@ -35,9 +35,9 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     <main className="mx-auto max-w-7xl px-5 pt-6 md:px-6 md:pt-10">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[11px] font-bold tracking-[0.18em] text-pink uppercase">Shop</p>
-          <h1 className="mt-1.5 font-display text-[36px] leading-none tracking-[-0.02em] md:text-[52px]">
-            {activeCategory ? activeCategory.name : <>All <em className="text-pink italic">designs</em></>}
+          <p className="eyebrow">Shop</p>
+          <h1 className="mt-1.5 font-display text-[42px] leading-none uppercase md:text-[66px]">
+            {activeCategory ? activeCategory.name : <>All <em className="font-normal text-pink italic normal-case">designs</em></>}
           </h1>
           <p className="mt-2 text-sm text-ink-2">{data.total} handmade {data.total === 1 ? "set" : "sets"}</p>
         </div>

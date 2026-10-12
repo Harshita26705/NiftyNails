@@ -86,10 +86,13 @@ export function heartPathAt(x: number, y: number, s: number): string {
 /**
  * A French-tip band as a filled path, clipped to the nail outline by the caller. `depth`/`curve` are 0–1
  * fractions of the nail height; `offsetX`/`offsetY` (also 0–1-ish, signed) nudge the band for asymmetric tips.
+ * The smile line is a single smooth cubic (both control points at the same height), which reads as a gentle,
+ * even curve rather than a pointed dip — and `bow` is capped independent of `depth`, so a deep tip stays a
+ * classic smile line instead of turning into a sharp chevron.
  */
 export function frenchTipPath(h: number, depth: number, curve: number, offsetX = 0, offsetY = 0): string {
   const d = Math.max(2, depth * h + offsetY * h);
-  const bow = curve * d * 0.85;
-  const cx = 50 + offsetX * 130;
-  return `M -8 -8 L 108 -8 L 108 ${d} Q ${cx} ${d + bow} -8 ${d} Z`;
+  const bow = curve * 14;
+  const shift = offsetX * 40;
+  return `M -8 -8 L 108 -8 L 108 ${d} C ${108 + shift} ${d + bow} ${-8 + shift} ${d + bow} -8 ${d} Z`;
 }

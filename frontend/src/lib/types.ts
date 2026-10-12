@@ -162,6 +162,14 @@ export type StylistResult = {
   matches: Match[];
 };
 
+export type ColorAnalysisResult = {
+  request_id: number;
+  summary: string;
+  tone: { hex: string; undertone: "warm" | "cool" | "neutral"; depth: "fair" | "light" | "medium" | "tan" | "deep" };
+  recommended_colours: { slug: string; name: string; hex: string; reason: string }[];
+  matches: Match[];
+};
+
 export type SizingResult = {
   request_id: number | null;
   ok: boolean;

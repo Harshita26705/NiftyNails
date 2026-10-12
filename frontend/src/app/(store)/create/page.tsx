@@ -21,9 +21,9 @@ export default function CreatePage() {
   return (
     <main className="mx-auto max-w-5xl px-5 pt-8 md:px-6 md:pt-14">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="text-[11px] font-bold tracking-[0.18em] text-pink uppercase">Create your own</p>
+        <p className="eyebrow">Create your own</p>
         <h1 className="mt-2 font-display text-[40px] leading-[1.02] tracking-[-0.025em] md:text-[60px]">
-          How do you want to <em className="text-pink italic">design?</em>
+          How do you want to <em className="font-normal text-pink italic normal-case">design?</em>
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
           Either way, you&apos;ll only see colours, finishes and charms we actually stock — so what you design is exactly what we make.

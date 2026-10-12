@@ -70,6 +70,27 @@ class StylistOut(BaseModel):
     custom_request_available: bool = True
 
 
+class SkinToneOut(BaseModel):
+    hex: str
+    undertone: Literal["warm", "cool", "neutral"]
+    depth: Literal["fair", "light", "medium", "tan", "deep"]
+
+
+class ColourRecommendationOut(BaseModel):
+    slug: str
+    name: str
+    hex: str
+    reason: str
+
+
+class ColorAnalysisOut(BaseModel):
+    request_id: int
+    summary: str
+    tone: SkinToneOut
+    recommended_colours: list[ColourRecommendationOut]
+    matches: list[MatchOut]
+
+
 class SizingFingerOut(BaseModel):
     finger: str
     width_mm: float | None

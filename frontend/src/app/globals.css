@@ -2,44 +2,53 @@
 
 /* ------------------------------------------------------------------ Nifty design tokens */
 @theme {
-  /* Warm ivory paper, taupe/stone neutrals, deep espresso ink, muted champagne, restrained burgundy accent. */
-  --color-paper: #faf6ef;
-  --color-surface: #fffdfa;
-  --color-blush-50: #f6f0e6;
-  --color-blush-100: #efe6d5;
-  --color-blush-200: #e3d4b8;
-  --color-blush-300: #cdb488;
-  --color-blush-400: #b3925f;
-  --color-pink: #7a2e3a;
-  --color-pink-deep: #5c1f28;
-  --color-ink: #2b2420;
-  --color-ink-2: #62564a;
-  --color-ink-3: #978a79;
-  --color-line: #e6ddcd;
-  --color-line-strong: #d6c9b2;
-  --color-champagne: #efe1c8;
+  /* Palette drawn from the Nifty Nails emblem: cream ground, sand, espresso ink, antique gold. */
+  --color-paper: #fcf5eb;
+  --color-surface: #fffcf7;
+  --color-blush-50: #f8efe2;
+  --color-blush-100: #f3e5d3;
+  --color-blush-200: #e8d3b8;
+  --color-blush-300: #d9be94;
+  --color-blush-400: #b98f5e;
+  /* "pink" is the brand accent token used across the app; it is now antique gold (text-safe on cream). */
+  --color-pink: #84561a;
+  --color-pink-deep: #66410f;
+  --color-gold: #a06a20;
+  --color-ink: #2e1a10;
+  --color-ink-2: #6a5648;
+  --color-ink-3: #7d6b58;
+  --color-line: #e4d3bd;
+  --color-line-strong: #d3bd9d;
+  --color-champagne: #f1e0c6;
   --color-cream: #f8f1e2;
-  --color-mint: #e3e8dd;
+  --color-mint: #e5e9dc;
   --color-success: #3f6b4a;
   --color-warning: #8a5a1e;
   --color-danger: #8c3230;
 
-  --font-display: var(--font-fraunces), "Georgia", serif;
-  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
 
-  --radius-xl: 0.5rem;
-  --radius-2xl: 0.75rem;
-  --radius-3xl: 1rem;
+  --radius-xl: 0.25rem;
+  --radius-2xl: 0.375rem;
+  --radius-3xl: 0.5rem;
 
-  --shadow-soft: 0 1px 2px rgb(43 36 32 / 0.04), 0 8px 24px -12px rgb(43 36 32 / 0.1);
-  --shadow-lift: 0 2px 4px rgb(43 36 32 / 0.05), 0 18px 36px -18px rgb(43 36 32 / 0.22);
-  --shadow-nail: 0 10px 18px -10px rgb(43 36 32 / 0.32);
+  --shadow-soft: 0 1px 2px rgb(46 26 16 / 0.04), 0 10px 26px -16px rgb(46 26 16 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(46 26 16 / 0.05), 0 22px 40px -22px rgb(46 26 16 / 0.28);
+  --shadow-nail: 0 10px 18px -10px rgb(46 26 16 / 0.32);
 
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-pop: pop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
   --animate-float: float 6s ease-in-out infinite;
   --animate-shimmer: shimmer 1.4s linear infinite;
   --animate-marquee: marquee 40s linear infinite;
+  --animate-turn: turn 60s linear infinite;
+  --animate-turn-rev: turn-rev 90s linear infinite;
+  --animate-orbit: turn 26s linear infinite;
+  --animate-breathe: breathe 6s ease-in-out infinite;
+  --animate-nfloat: nfloat 7s ease-in-out infinite;
+  --animate-petal: petal 16s linear infinite;
+  --animate-pulse-ring: pulse-ring 3.2s ease-out infinite;
 
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
@@ -61,7 +70,38 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  @keyframes turn { to { transform: rotate(360deg); } }
+  @keyframes turn-rev { to { transform: rotate(-360deg); } }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.03); opacity: 0.5; }
+  }
+  @keyframes nfloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+  @keyframes petal {
+    0% { transform: translate(0, -60px) rotate(0deg); opacity: 0; }
+    8% { opacity: 0.95; }
+    50% { transform: translate(38px, calc(var(--fall, 720px) * 0.45)) rotate(160deg); }
+    92% { opacity: 0.9; }
+    100% { transform: translate(-14px, var(--fall, 720px)) rotate(330deg); opacity: 0; }
+  }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgb(160 106 32 / 0.55); }
+    70%, 100% { box-shadow: 0 0 0 9px rgb(160 106 32 / 0); }
+  }
 }
+
+/* Keyframes referenced by plain utilities (not theme animate-* tokens), so they live outside @theme. */
+@keyframes shimmer-text {
+  0%, 55% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
+@keyframes reveal-up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-left { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-right { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-scale { from { opacity: 0; transform: scale(0.93) translateY(24px); } to { opacity: 1; transform: none; } }
 
 @layer base {
   html {
@@ -72,6 +112,7 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
+    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -93,6 +134,7 @@
     min-width: 0;
   }
   @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-l, .reveal-r, .reveal-s { animation: none !important; }
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
@@ -105,9 +147,30 @@
 @layer components {
   .font-display {
     font-family: var(--font-display);
-    font-optical-sizing: auto;
-    font-variation-settings: "SOFT" 100, "WONK" 0;
+    font-weight: 500;
   }
+  /* Small tracked caps label used above headings and on badges. */
+  .eyebrow {
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-pink);
+  }
+  /* Text link with a fine gold underline. */
+  .link-rule {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-gold);
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: gap 0.25s ease, color 0.2s ease;
+  }
+  .link-rule:hover { gap: 0.95rem; color: var(--color-pink); }
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
 
@@ -122,9 +185,59 @@
 
   /* Subtle dotted "paper" texture used behind nail art */
   .dot-grid {
-    background-image: radial-gradient(rgb(122 46 58 / 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(rgb(160 106 32 / 0.14) 1px, transparent 1px);
     background-size: 14px 14px;
   }
 
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  /* Hero copy arrives line by line. */
+  .stagger > * { animation: fade-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .stagger > :nth-child(2) { animation-delay: 120ms; }
+  .stagger > :nth-child(3) { animation-delay: 240ms; }
+  .stagger > :nth-child(4) { animation-delay: 360ms; }
+
+  /* Gold shimmer that sweeps across an accent word. Falls back to plain gold where background-clip:text is missing. */
+  .shimmer {
+    color: var(--color-pink);
+    background: linear-gradient(100deg, #84561a 0%, #84561a 42%, #d9ae62 50%, #84561a 58%, #84561a 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-text 7s ease-in-out infinite;
+  }
+
+  /* Light sweep across an arch on hover (the parent needs `group`). */
+  .sheen { position: relative; }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.55) 50%, transparent 62%);
+    transform: translateX(-130%);
+  }
+  .group:hover .sheen::after { transform: translateX(130%); transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+  /* Arrows in links and buttons nudge forward on hover. */
+  a > svg.lucide-arrow-right, button > svg.lucide-arrow-right { transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  a:hover > svg.lucide-arrow-right, button:hover > svg.lucide-arrow-right { transform: translateX(5px); }
+
+  /* Scroll-driven reveals. Only browsers with view timelines animate; everywhere else content simply shows. */
+  @supports (animation-timeline: view()) {
+    .reveal, .reveal-l, .reveal-r, .reveal-s {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .reveal { animation-name: reveal-up; }
+    .reveal-l { animation-name: reveal-left; }
+    .reveal-r { animation-name: reveal-right; }
+    .reveal-s { animation-name: reveal-scale; }
+    .reveal:nth-child(2) { animation-range: entry 6% entry 51%; }
+    .reveal:nth-child(3) { animation-range: entry 12% entry 57%; }
+    .reveal:nth-child(4) { animation-range: entry 18% entry 63%; }
+  }
 }

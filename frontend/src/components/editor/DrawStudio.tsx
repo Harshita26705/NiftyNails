@@ -20,10 +20,11 @@ import type {
   NailKey, ProductDetail, ShapeKind, ShapeObject, TextObject,
 } from "@/lib/types";
 import { CharmLayer } from "./CharmLayer";
+import { LiveTryOn } from "./LiveTryOn";
 import { ObjectStage, type StageMode } from "./ObjectStage";
 import {
   cloneNailContent, type Studio, blankStudio, charmId, emptyNail, mirrorNailContent, nailLabel, nailSpec,
-  objectId, studioFromProduct, toConfig,
+  normalizeStudio, objectId, studioFromProduct, toConfig,
 } from "./studioModel";
 import {
   BRUSHES, BrushPanel, CharmsPanel, ColourPanel, FinishPanel, FrenchTipPanel, GradientPanel, LayersPanel, NailTools,
@@ -97,6 +98,7 @@ export function DrawStudio() {
   const [applyMode, setApplyMode] = useState(false);
   const [applyTargets, setApplyTargets] = useState<Set<NailKey>>(new Set());
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
   // The last server quote, tagged with the design it priced (so "pricing…" is derived, not stored).
   const [priced, setPriced] = useState<{ config: string; quote: DesignQuote | null } | null>(null);
   const stageBox = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ export function DrawStudio() {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
       if (raw) {
-        history.reset(JSON.parse(raw) as Studio);
+        history.reset(normalizeStudio(JSON.parse(raw) as Studio));
         return;
       }
     } catch { /* ignore */ }
@@ -358,7 +360,7 @@ export function DrawStudio() {
             <span className="w-10 text-center text-[12px] font-semibold text-ink-2 tabular-nums">{Math.round(zoom * 100)}%</span>
             <button type="button" aria-label="Zoom in" onClick={() => setZoom((z) => Math.min(2, +(z + 0.15).toFixed(2)))} className="flex size-10 items-center justify-center rounded-full hover:bg-blush-100"><ZoomIn className="size-[18px]" /></button>
           </div>
-          <NailTools onCopyAll={copyToAll} onMirror={mirror} onApply={() => setApplyMode(true)} onClear={() => setNail(active, emptyNail())} />
+          <NailTools onCopyAll={copyToAll} onMirror={mirror} onApply={() => setApplyMode(true)} onClear={() => setNail(active, emptyNail())} onTryOn={() => setTryOnOpen(true)} />
         </div>
         <div ref={stageBox} className="dot-grid relative flex min-h-0 flex-1 items-center justify-center overflow-hidden"
           onPointerDown={(e) => { if (e.target === e.currentTarget) { setSelectedCharm(null); setSelectedObject(null); } }}>
@@ -367,7 +369,7 @@ export function DrawStudio() {
               <NailGroup spec={spec} />
             </svg>
             {interactive === "stage" && (
-              <ObjectStage objects={nail.objects} h={h} uid={uid} mode={stageMode} brushColour={brushColour}
+              <ObjectStage objects={nail.objects} h={h} uid={uid} clipD={nailPath(shapeKey, h)} mode={stageMode} brushColour={brushColour}
                 brushSize={brushSize} brushOpacity={brushOpacity} brushType="round" selected={selectedObject}
                 onSelect={setSelectedObject} onGestureStart={history.checkpoint} onAdd={objAdd} onUpdate={objUpdate} onRemove={objRemove} />
             )}
@@ -391,7 +393,7 @@ export function DrawStudio() {
           )}
         </div>
         <div className="border-t border-line px-3 py-2 lg:hidden">
-          <NailTools onCopyAll={copyToAll} onMirror={mirror} onApply={() => setApplyMode(true)} onClear={() => setNail(active, emptyNail())} />
+          <NailTools onCopyAll={copyToAll} onMirror={mirror} onApply={() => setApplyMode(true)} onClear={() => setNail(active, emptyNail())} onTryOn={() => setTryOnOpen(true)} />
         </div>
       </div>
 
@@ -507,6 +509,7 @@ export function DrawStudio() {
           </div>
         )}
       </div>
+      {tryOnOpen && <LiveTryOn studio={studio} catalog={catalog} onClose={() => setTryOnOpen(false)} />}
     </div>
   );
 }

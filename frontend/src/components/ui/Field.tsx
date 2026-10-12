@@ -3,8 +3,8 @@ import { type ComponentProps, type ReactNode, useId } from "react";
 import { cn } from "@/lib/format";
 
 const control =
-  "w-full rounded-2xl bg-surface px-4 text-[15px] text-ink ring-1 ring-inset ring-line placeholder:text-ink-3 " +
-  "transition focus:outline-none focus:ring-2 focus:ring-pink disabled:bg-blush-50 disabled:text-ink-3";
+  "w-full rounded-[2px] bg-surface px-4 text-[15px] text-ink ring-1 ring-inset ring-line-strong placeholder:text-ink-3 " +
+  "transition focus:outline-none focus:ring-2 focus:ring-gold disabled:bg-blush-50 disabled:text-ink-3";
 
 export function Field({ label, hint, error, children, className, htmlFor }: {
   label?: ReactNode; hint?: ReactNode; error?: string | null; children: ReactNode; className?: string; htmlFor?: string;
@@ -12,7 +12,7 @@ export function Field({ label, hint, error, children, className, htmlFor }: {
   return (
     <div className={cn("space-y-1.5", className)}>
       {label && (
-        <label htmlFor={htmlFor} className="block text-[13px] font-semibold text-ink">
+        <label htmlFor={htmlFor} className="block text-[11.5px] font-medium tracking-[0.16em] text-ink uppercase">
           {label}
         </label>
       )}

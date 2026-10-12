@@ -1,0 +1,65 @@
+INFO:     Started server process [28836]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58259 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64602 - "GET /api/v1/site HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64603 - "GET /api/v1/products?sort=popular&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64601 - "GET /api/v1/products?featured=true&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64605 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64604 - "GET /api/v1/products?page_size=48&sort=newest HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64607 - "GET /api/v1/reviews/featured HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58399 - "GET /api/v1/products?limit=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57591 - "GET /api/v1/products?page_size=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51272 - "GET /api/v1/site HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51276 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51273 - "GET /api/v1/products?featured=true&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51277 - "GET /api/v1/reviews/featured HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51274 - "GET /api/v1/products?sort=popular&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51275 - "GET /api/v1/products?page_size=48&sort=newest HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53615 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53617 - "GET /api/v1/auth/session HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53617 - "GET /api/v1/auth/session HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64594 - "GET /api/v1/auth/session HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64592 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64594 - "GET /api/v1/auth/session HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57497 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55805 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55805 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50938 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50938 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50938 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50938 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50938 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49175 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49175 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49175 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58907 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58909 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49323 - "POST /api/v1/designs/quote HTTP/1.1" 200 OK
+C:\Users\HarshitaSuri\OneDrive - CG Infinity\Desktop\Nifty\backend\.venv\Lib\site-packages\starlette\_exception_handler.py:59: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+  response = await handler(conn, exc)  # type: ignore[arg-type]
+INFO:     127.0.0.1:49323 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:53703 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:53703 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:60692 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:58943 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51425 - "POST /api/v1/designs/quote HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:55256 - "GET /api/v1/site HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55257 - "GET /api/v1/products?featured=true&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55260 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55259 - "GET /api/v1/products?page_size=48&sort=newest HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55258 - "GET /api/v1/products?sort=popular&page_size=8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55261 - "GET /api/v1/reviews/featured HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "GET /api/v1/auth/session HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49678 - "GET /api/v1/catalog/options HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49678 - "GET /api/v1/auth/session HTTP/1.1" 200 OK

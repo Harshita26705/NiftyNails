@@ -33,12 +33,13 @@ function distToSegment(p: { x: number; y: number }, a: { x: number; y: number },
 export type StageMode = "select" | "draw" | "erase" | "none";
 
 export function ObjectStage({
-  objects, h, uid, mode, brushColour, brushSize, brushOpacity, brushType,
+  objects, h, uid, clipD, mode, brushColour, brushSize, brushOpacity, brushType,
   selected, onSelect, onGestureStart, onAdd, onUpdate, onRemove,
 }: {
   objects: DesignObject[];
   h: number; // nail units
   uid: string;
+  clipD: string; // nail outline path, so drawn content can't visually leave the nail
   mode: StageMode;
   brushColour: string;
   brushSize: number;
@@ -187,11 +188,21 @@ export function ObjectStage({
     }
   };
 
+  const clipId = `stage-clip-${uid}`;
+
   return (
     <svg ref={svg} viewBox={`0 0 ${W} ${h}`} className="absolute inset-0 size-full overflow-visible"
       style={{ touchAction: mode === "none" ? "auto" : "none", cursor: mode === "draw" ? "crosshair" : mode === "erase" ? "cell" : "default", pointerEvents: mode === "none" ? "none" : "auto" }}
       onPointerDown={onStageDown} onPointerMove={onStageMove} onPointerUp={onStageUp} onPointerCancel={onStageUp}
       aria-label={mode === "draw" ? "Drawing canvas" : mode === "erase" ? "Eraser canvas" : "Design objects"}>
+      <defs>
+        <clipPath id={clipId}>
+          <path d={clipD} />
+        </clipPath>
+      </defs>
+      {/* Invisible full-bleed rect so pointer events (draw/erase) still register outside the visible nail area. */}
+      <rect x={-5} y={-5} width={W + 10} height={h + 10} fill="transparent" />
+      <g clipPath={`url(#${clipId})`}>
       {objects.filter((o) => !o.hidden).map((o) => {
         if (o.type === "stroke") {
           const d = o.points.length < 2 ? "" : `M ${o.points.map((pt) => `${pt.x * W} ${pt.y * h}`).join(" L ")}`;
@@ -224,7 +235,6 @@ export function ObjectStage({
         }
         if (!TRANSFORMABLE.has(o.type)) return null;
         const t = o as Transformable;
-        const isSel = mode === "select" && selected === t.id;
         return (
           <g key={t.id} opacity={t.opacity}
             transform={`translate(${t.x * W} ${t.y * h}) rotate(${t.rotation}) scale(${t.scale})`}
@@ -249,21 +259,28 @@ export function ObjectStage({
             {t.type === "image" && (
               <image href={t.url} x={-15} y={-15} width={30} height={30} preserveAspectRatio="xMidYMid meet" />
             )}
-            {isSel && (
-              <g stroke="var(--color-pink, #7a2e3a)" strokeOpacity={0.7} fill="none">
-                <rect x={-13} y={-13} width={26} height={26} strokeWidth={0.6} strokeDasharray="1.4 1.4" />
-                <g transform="translate(13 13)" onPointerDown={(e) => startHandle(e, t)} style={{ cursor: "nwse-resize" }}>
-                  <circle r={2.6} fill="var(--color-pink, #7a2e3a)" stroke="none" />
-                </g>
-                <g transform="translate(-13 -13)" onPointerDown={(e) => { e.stopPropagation(); onRemove(t.id); }} style={{ cursor: "pointer" }}>
-                  <circle r={2.6} fill="var(--color-ink, #2b2420)" stroke="none" />
-                  <path d="M -1 -1 L 1 1 M 1 -1 L -1 1" stroke="#fff" strokeWidth={0.5} />
-                </g>
-              </g>
-            )}
           </g>
         );
       })}
+      </g>
+      {/* Selection outline + handles render outside the nail clip so they stay reachable near the edge. */}
+      {(() => {
+        const t = objects.find((o) => TRANSFORMABLE.has(o.type) && !o.hidden && mode === "select" && selected === o.id) as Transformable | undefined;
+        if (!t) return null;
+        return (
+          <g transform={`translate(${t.x * W} ${t.y * h}) rotate(${t.rotation}) scale(${t.scale})`}
+            stroke="var(--color-pink, #7a2e3a)" strokeOpacity={0.7} fill="none">
+            <rect x={-13} y={-13} width={26} height={26} strokeWidth={0.6} strokeDasharray="1.4 1.4" />
+            <g transform="translate(13 13)" onPointerDown={(e) => startHandle(e, t)} style={{ cursor: "nwse-resize" }}>
+              <circle r={2.6} fill="var(--color-pink, #7a2e3a)" stroke="none" />
+            </g>
+            <g transform="translate(-13 -13)" onPointerDown={(e) => { e.stopPropagation(); onRemove(t.id); }} style={{ cursor: "pointer" }}>
+              <circle r={2.6} fill="var(--color-ink, #2b2420)" stroke="none" />
+              <path d="M -1 -1 L 1 1 M 1 -1 L -1 1" stroke="#fff" strokeWidth={0.5} />
+            </g>
+          </g>
+        );
+      })()}
     </svg>
   );
 }

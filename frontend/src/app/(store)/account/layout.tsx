@@ -29,8 +29,8 @@ function Gate({ children }: { children: React.ReactNode }) {
     return (
       <main className="mx-auto grid max-w-5xl gap-10 px-5 pt-8 md:grid-cols-2 md:items-center md:px-6 md:pt-16">
         <div>
-          <p className="text-[11px] font-bold tracking-[0.18em] text-pink uppercase">Your Nifty account</p>
-          <h1 className="mt-2 font-display text-[40px] leading-[1.02] tracking-[-0.025em] md:text-[56px]">Welcome <em className="text-pink italic">back.</em></h1>
+          <p className="eyebrow">Your Nifty account</p>
+          <h1 className="mt-2 font-display text-[40px] leading-[1.02] tracking-[-0.025em] md:text-[56px]">Welcome <em className="font-normal text-pink italic normal-case">back.</em></h1>
           <ul className="mt-5 space-y-2 text-[14.5px] text-ink-2">
             {["Save your designs and favourites", "Keep your nail sizes on file", "Track orders and reorder in a tap"].map((t) => (
               <li key={t} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-pink" />{t}</li>
@@ -46,7 +46,7 @@ function Gate({ children }: { children: React.ReactNode }) {
       <div className="flex items-end justify-between gap-4">
         <div>
           <p className="text-[13px] text-ink-2">Signed in as {user.email}</p>
-          <h1 className="font-display text-[34px] leading-none tracking-[-0.02em] md:text-[46px]">Hi, <em className="text-pink italic">{user.full_name.split(" ")[0]}</em></h1>
+          <h1 className="font-display text-[40px] leading-none uppercase md:text-[60px]">Hi, <em className="font-normal text-pink italic normal-case">{user.full_name.split(" ")[0]}</em></h1>
         </div>
         <button onClick={async () => { await logout(); router.push("/"); }} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-semibold text-ink-2 hover:bg-blush-50">
           <LogOut className="size-4" /> Sign out

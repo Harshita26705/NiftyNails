@@ -12,11 +12,11 @@ import { useFocusMode } from "./FocusAware";
 import { Logo } from "./Logo";
 
 export const NAV = [
-  { href: "/shop", label: "Shop" },
-  { href: "/create", label: "Create your own" },
+  { href: "/shop", label: "Collection" },
+  { href: "/create", label: "Design studio" },
   { href: "/stylist", label: "AI Stylist" },
   { href: "/size", label: "Find my size" },
-  { href: "/gift", label: "Gift Nifty" },
+  { href: "/gift", label: "Gifting" },
 ];
 
 export function BagButton({ className }: { className?: string }) {
@@ -25,7 +25,7 @@ export function BagButton({ className }: { className?: string }) {
     <Link href="/bag" aria-label={`Bag, ${count} items`} className={cn("relative inline-flex size-11 items-center justify-center rounded-full hover:bg-blush-100", className)}>
       <ShoppingBag className="size-[21px]" strokeWidth={1.8} />
       {count > 0 && (
-        <span className="absolute top-1 right-0.5 flex h-[18px] min-w-[18px] animate-pop items-center justify-center rounded-full bg-pink px-1 text-[10px] font-bold text-white ring-2 ring-paper">
+        <span className="absolute top-1 right-0.5 flex h-[18px] min-w-[18px] animate-pop items-center justify-center rounded-full animate-pulse-ring bg-gold px-1 text-[10px] font-medium text-white ring-2 ring-paper">
           {count}
         </span>
       )}
@@ -56,36 +56,36 @@ export function Header({ announcement }: { announcement?: string }) {
   return (
     <>
       {announcement && !focus && (
-        <div className="truncate bg-ink px-4 py-2 text-center text-[11.5px] font-medium tracking-wide text-blush-100">
+        <div className="truncate bg-ink px-4 py-2.5 text-center text-[11px] font-normal tracking-[0.22em] text-blush-200 uppercase">
           {announcement}
         </div>
       )}
       <header
         className={cn(
           "sticky top-0 z-50 transition-all duration-300",
-          scrolled ? "bg-paper/85 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl" : "bg-paper",
+          "shadow-[0_1px_0_var(--color-line)]", scrolled ? "bg-paper/90 backdrop-blur-xl" : "bg-paper",
         )}
       >
-        <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-2 px-3 md:h-18 md:px-6">
+        <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-2 px-3 md:h-[88px] md:px-10">
           <div className="flex items-center md:hidden">
             <button aria-label="Open menu" onClick={() => setMenu(true)} className="inline-flex size-11 items-center justify-center rounded-full hover:bg-blush-100">
               <Menu className="size-[22px]" strokeWidth={1.8} />
             </button>
           </div>
 
-          <Logo className="md:mr-6" />
+          <Logo />
 
-          <nav className="hidden flex-1 items-center gap-1 md:flex" aria-label="Main">
+          <nav className="hidden flex-1 items-center justify-center gap-4 md:flex" aria-label="Main">
             {NAV.map((item) => {
               const active = pathname.startsWith(item.href);
               return (
                 <Link key={item.href} href={item.href}
                   className={cn(
-                    "relative rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors",
-                    active ? "text-ink" : "text-ink-2 hover:text-ink",
+                    "relative px-4 py-2 text-[12.5px] font-medium tracking-[0.18em] uppercase transition-colors after:absolute after:inset-x-4 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 hover:after:scale-x-100",
+                    active ? "text-ink" : "text-ink hover:text-pink",
                   )}>
                   {item.label}
-                  {active && <span className="absolute inset-x-3.5 -bottom-0.5 h-0.5 rounded-full bg-pink" />}
+                  {active && <span className="absolute inset-x-4 -bottom-0.5 h-px bg-gold" />}
                 </Link>
               );
             })}
@@ -100,7 +100,7 @@ export function Header({ announcement }: { announcement?: string }) {
             </Link>
             <Link href="/account" aria-label="Account" className="hidden size-11 items-center justify-center rounded-full hover:bg-blush-100 md:inline-flex">
               {user ? (
-                <span className="flex size-8 items-center justify-center rounded-full bg-blush-200 text-[13px] font-bold text-pink-deep">
+                <span className="flex size-8 items-center justify-center rounded-full bg-blush-200 text-[13px] font-medium text-pink-deep">
                   {user.full_name.slice(0, 1).toUpperCase()}
                 </span>
               ) : (
@@ -116,17 +116,17 @@ export function Header({ announcement }: { announcement?: string }) {
         <nav className="flex flex-col gap-1 pt-2" aria-label="Mobile">
           {[{ href: "/", label: "Home" }, ...NAV, { href: "/track", label: "Track an order" }].map((item) => (
             <Link key={item.href} href={item.href}
-              className={cn("rounded-2xl px-4 py-3.5 font-display text-2xl", pathname === item.href ? "bg-blush-100 text-pink-deep" : "hover:bg-blush-50")}>
+              className={cn("border-b border-line px-2 py-4 font-display text-[30px] uppercase", pathname === item.href ? "text-pink" : "hover:text-pink")}>
               {item.label}
             </Link>
           ))}
         </nav>
         <div className="mt-6 grid grid-cols-2 gap-2">
-          <Link href="/account" className="rounded-2xl bg-surface p-4 text-sm font-semibold ring-1 ring-line">
+          <Link href="/account" className="rounded-[2px] bg-surface p-4 text-sm font-medium ring-1 ring-line">
             <User className="mb-2 size-5 text-pink" />
             {user ? `Hi, ${user.full_name.split(" ")[0]}` : "Sign in"}
           </Link>
-          <Link href={user ? "/account/favourites" : "/account"} className="rounded-2xl bg-surface p-4 text-sm font-semibold ring-1 ring-line">
+          <Link href={user ? "/account/favourites" : "/account"} className="rounded-[2px] bg-surface p-4 text-sm font-medium ring-1 ring-line">
             <Heart className="mb-2 size-5 text-pink" />
             Favourites
           </Link>

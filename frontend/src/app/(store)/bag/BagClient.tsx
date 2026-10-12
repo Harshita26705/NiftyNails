@@ -45,7 +45,7 @@ export function OrderSummary({ quote, children }: { quote: CartQuote | null; chi
   if (!quote) return <Card><div className="skeleton h-32 rounded-2xl" /></Card>;
   const pct = Math.min(100, Math.round(((quote.free_shipping_threshold_paise - quote.free_shipping_remaining_paise) / quote.free_shipping_threshold_paise) * 100));
   return (
-    <Card>
+    <Card className="!bg-blush-100">
       <p className="font-display text-2xl">Summary</p>
       <div className="mt-4 rounded-2xl bg-blush-50 p-3.5">
         <p className="flex items-center gap-2 text-[13px] font-semibold">
@@ -94,7 +94,7 @@ export function BagClient() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 pt-6 md:px-6 md:pt-10">
-      <h1 className="font-display text-[38px] leading-none tracking-[-0.02em] md:text-[52px]">Your <em className="text-pink italic">bag</em></h1>
+      <h1 className="font-display text-[44px] leading-none uppercase md:text-[66px]">Your <em className="font-normal text-pink italic normal-case">bag</em></h1>
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
         <ul className="divide-y divide-line">
           {lines.map((line, i) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  ArrowDown, ArrowUp, Brush, Copy, Eraser, Eye, EyeOff, FlipHorizontal2, Layers, Lock, Minus, Plus, RotateCcw,
+  ArrowDown, ArrowUp, Brush, Camera, Copy, Eraser, Eye, EyeOff, FlipHorizontal2, Layers, Lock, Minus, Plus, RotateCcw,
   RotateCw, Trash2, Unlock,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -497,12 +497,15 @@ export function ShapePanel({ catalog, shape, length, base, onShape, onLength }: 
   );
 }
 
-export function NailTools({ onCopyAll, onMirror, onApply, onClear }: {
-  onCopyAll: () => void; onMirror: () => void; onApply: () => void; onClear: () => void;
+export function NailTools({ onCopyAll, onMirror, onApply, onClear, onTryOn }: {
+  onCopyAll: () => void; onMirror: () => void; onApply: () => void; onClear: () => void; onTryOn?: () => void;
 }) {
   const btn = "inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface px-3.5 py-2 text-[12.5px] font-semibold ring-1 ring-line hover:bg-blush-50";
   return (
     <div className="scrollbar-none flex gap-2 overflow-x-auto">
+      {onTryOn && (
+        <button type="button" className={btn} onClick={onTryOn}><Camera className="size-4 text-pink" /> Try on live</button>
+      )}
       <button type="button" className={btn} onClick={onCopyAll}><Copy className="size-4 text-pink" /> Copy to all nails</button>
       <button type="button" className={btn} onClick={onMirror}><FlipHorizontal2 className="size-4 text-pink" /> Mirror to other hand</button>
       <button type="button" className={btn} onClick={onApply}><Layers className="size-4 text-pink" /> Apply to selected</button>

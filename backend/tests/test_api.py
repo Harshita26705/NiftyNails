@@ -194,6 +194,15 @@ def test_stylist_endpoint(client):
     assert body["matches"]
 
 
+def test_color_analysis_endpoint(client):
+    body = client.post(f"{API}/ai/color-analysis",
+                       files={"image": ("selfie.png", _png_bytes((222, 174, 140)), "image/png")}).json()
+    assert body["tone"]["undertone"] in ("warm", "cool", "neutral")
+    assert body["tone"]["depth"] in ("fair", "light", "medium", "tan", "deep")
+    assert len(body["recommended_colours"]) >= 1
+    assert body["summary"]
+
+
 def test_upload_validation_rejects_non_images(client):
     r = client.post(f"{API}/ai/stylist", files={"image": ("evil.png", b"<?php echo 1; ?>", "image/png")})
     assert r.status_code == 422

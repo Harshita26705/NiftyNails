@@ -8,15 +8,19 @@ from app.ml.attribute_parser import AttributeParser, ParsedQuery
 from app.ml.colour import hex_distance
 from app.ml.outfit import analyse_outfit
 from app.ml.sizing import HandLandmarks, estimate_sizes
+from app.ml.skin_tone import analyse_skin_tone, recommend_colours
 from app.ml.vocabulary import Vocabulary
 from app.models import AIRequest, NailSize, SizeKit
 from app.schemas.ai import (
+    ColorAnalysisOut,
+    ColourRecommendationOut,
     MatchOut,
     PaletteColourOut,
     ParsedAttributesOut,
     SearchOut,
     SizingFingerOut,
     SizingOut,
+    SkinToneOut,
     StylistOut,
     UnavailableOut,
 )
@@ -159,6 +163,34 @@ def stylist(db: Session, rgb: np.ndarray, note: str, user_id: int | None) -> Sty
     return StylistOut(
         request_id=row.id, summary=summary, palette=palette_out, metallic=analysis.metallic,
         pattern=analysis.pattern, style_keywords=analysis.keywords, attributes=attrs, matches=matches,
+    )
+
+
+def color_analysis(db: Session, rgb: np.ndarray, user_id: int | None) -> ColorAnalysisOut:
+    analysis = analyse_skin_tone(rgb)
+    vocab = Vocabulary.from_db(db)
+    colours = vocab.available("colour")
+    picks = recommend_colours(analysis, colours, limit=6)
+    recommended = [ColourRecommendationOut(slug=c.slug, name=c.name, hex=c.get("hex"), reason=reason) for c, reason in picks]
+    slugs = [c.slug for c, _ in picks]
+
+    parser = AttributeParser(vocab)
+    parsed = parser.parse("")
+    parsed.colours = slugs
+    scored = rank_products(db, active_products(db), " ".join(slugs), parsed, vocab, limit=9, min_score=0.2)
+
+    undertone_word = {"warm": "warm", "cool": "cool", "neutral": "balanced"}[analysis.undertone]
+    summary = f"You have a {undertone_word} undertone with a {analysis.depth} depth — here's what we'd reach for."
+
+    matches = _matches(scored)
+    row = log_request(db, "tone", user_id, {}, {
+        "hex": analysis.hex, "undertone": analysis.undertone, "depth": analysis.depth,
+        "recommended": slugs, "top": [(m.product.id, m.match_percent) for m in matches[:5]],
+    }, [m.product.id for m in matches])
+    return ColorAnalysisOut(
+        request_id=row.id, summary=summary,
+        tone=SkinToneOut(hex=analysis.hex, undertone=analysis.undertone, depth=analysis.depth),
+        recommended_colours=recommended, matches=matches,
     )
 
 

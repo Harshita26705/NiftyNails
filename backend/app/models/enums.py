@@ -76,6 +76,7 @@ class AIRequestKind(StrEnum):
     CHAT = "chat"
     GIFT = "gift"
     SIZING = "sizing"
+    TONE = "tone"
 
 
 class NailLength(StrEnum):

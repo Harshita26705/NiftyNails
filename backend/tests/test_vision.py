@@ -6,7 +6,7 @@ import pytest
 
 from app.ml.colour import delta_e, hex_to_lab
 from app.ml.outfit import analyse_outfit
-from app.ml.sizing import HandLandmarks, closest_size, detect_coin, estimate_sizes
+from app.ml.sizing import HandLandmarks, ReferenceFit, closest_size, detect_coin, estimate_sizes
 
 SIZES = [(s, 18.0 - s) for s in range(10)]  # size 0 = 18 mm … size 9 = 9 mm
 RATIOS = {"thumb": 0.8, "index": 0.76, "middle": 0.76, "ring": 0.75, "pinky": 0.74}
@@ -107,6 +107,19 @@ def test_sizing_without_hand_fails_honestly():
     img, _ = _synthetic_hand()
     result = estimate_sizes(img, "coin_10", SIZES, RATIOS, detector=FakeDetector(None))
     assert not result.ok and "hand" in result.warnings[0]
+
+
+def test_weak_reference_match_is_refused_not_calibrated_on(monkeypatch):
+    # A geometrically weak reference match (cluttered background, steep tilt, partial occlusion) still
+    # returns *some* mm_per_px — calibrating on it would produce confidently-wrong-looking sizes instead of
+    # an honest "we're not sure", so it must be refused outright rather than silently used.
+    img, hand = _synthetic_hand()
+    weak = ReferenceFit(kind="coin", mm_per_px=1 / PX_PER_MM, quality=0.2, geometry={"cx": 860, "cy": 150, "r": 108})
+    monkeypatch.setattr("app.ml.sizing.detect_coin", lambda *a, **k: weak)
+    result = estimate_sizes(img, "coin_10", SIZES, RATIOS, detector=FakeDetector(hand))
+    assert not result.ok
+    assert result.recommendation == "manual"
+    assert all(f.size is None for f in result.fingers.values())
 
 
 def test_outfit_palette_and_metallic():

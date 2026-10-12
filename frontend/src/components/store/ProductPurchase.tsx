@@ -10,15 +10,16 @@ import { useCart } from "@/lib/cart";
 import type { ProductDetail, SizeKit, SizeSelection } from "@/lib/types";
 import { FavouriteButton } from "./ProductCard";
 import { SizePicker } from "./SizePicker";
+import { TryOnLiveButton } from "./TryOnLiveButton";
 
 export function Stepper({ value, onChange, min = 1, max = 10 }: { value: number; onChange: (v: number) => void; min?: number; max?: number }) {
   return (
-    <div className="inline-flex h-12 items-center rounded-full bg-surface ring-1 ring-line ring-inset">
+    <div className="inline-flex h-12 items-center rounded-[2px] bg-surface ring-1 ring-line-strong ring-inset">
       <button type="button" aria-label="Decrease quantity" disabled={value <= min} onClick={() => onChange(value - 1)}
-        className="flex size-12 items-center justify-center rounded-full text-ink disabled:text-ink-3"><Minus className="size-4" /></button>
+        className="flex size-12 items-center justify-center rounded-[2px] text-ink disabled:text-ink-3"><Minus className="size-4" /></button>
       <span className="w-6 text-center font-semibold tabular-nums" aria-live="polite">{value}</span>
       <button type="button" aria-label="Increase quantity" disabled={value >= max} onClick={() => onChange(value + 1)}
-        className="flex size-12 items-center justify-center rounded-full text-ink disabled:text-ink-3"><Plus className="size-4" /></button>
+        className="flex size-12 items-center justify-center rounded-[2px] text-ink disabled:text-ink-3"><Plus className="size-4" /></button>
     </div>
   );
 }
@@ -57,9 +58,12 @@ export function ProductPurchase({ product, kits }: { product: ProductDetail; kit
         </Button>
         <FavouriteButton productId={product.id} className="size-13 ring-1 ring-line" />
       </div>
-      <ButtonLink href={`/create/draw?from=${product.slug}`} variant="soft" full icon={<Wand2 className="size-4" />}>
-        Customise this design
-      </ButtonLink>
+      <div className="flex items-center gap-3">
+        <ButtonLink href={`/create/draw?from=${product.slug}`} variant="soft" full icon={<Wand2 className="size-4" />}>
+          Customise this design
+        </ButtonLink>
+        <TryOnLiveButton product={product} variant="full" className="h-13 shrink-0" />
+      </div>
 
       {/* Sticky purchase bar on phones */}
       <div className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur-xl md:hidden">

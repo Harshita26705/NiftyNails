@@ -99,7 +99,7 @@ export function CheckoutClient() {
   return (
     <main className="mx-auto max-w-6xl px-5 pt-5 pb-16 md:px-6 md:pt-8">
       <Link href="/bag" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-2 hover:text-ink"><ArrowLeft className="size-4" /> Back to bag</Link>
-      <h1 className="mt-3 font-display text-[36px] leading-none tracking-[-0.02em] md:text-[48px]">Checkout</h1>
+      <h1 className="mt-3 font-display text-[42px] leading-none uppercase md:text-[62px]">Checkout</h1>
 
       <div className="mt-7 grid gap-8 lg:grid-cols-[1fr_400px]">
         <div className="space-y-5">

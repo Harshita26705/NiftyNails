@@ -9,9 +9,9 @@ export function SectionHeading({ eyebrow, title, accent, subtitle, action, align
   return (
     <div className={cn("flex flex-col gap-3 md:flex-row md:items-end md:justify-between", align === "center" && "items-center text-center md:flex-col md:items-center", className)}>
       <div className={cn("max-w-2xl", align === "center" && "mx-auto")}>
-        {eyebrow && <p className="mb-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase">{eyebrow}</p>}
-        <h2 className="font-display text-[30px] leading-[1.05] tracking-[-0.02em] text-balance text-ink md:text-[44px]">
-          {title} {accent && <em className="text-pink italic">{accent}</em>}
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+        <h2 className="font-display text-[38px] leading-[1.02] font-normal text-balance text-ink uppercase md:text-[58px]">
+          {title} {accent && <em className="font-normal text-pink italic normal-case">{accent}</em>}
         </h2>
         {subtitle && <p className="mt-3 text-[15px] leading-relaxed text-pretty text-ink-2 md:text-base">{subtitle}</p>}
       </div>
@@ -25,7 +25,7 @@ export function Price({ paise, compareAt, className, size = "md" }: {
 }) {
   const sizes = { sm: "text-sm", md: "text-[15px]", lg: "text-2xl" };
   return (
-    <span className={cn("inline-flex items-baseline gap-2 font-semibold tabular-nums", sizes[size], className)}>
+    <span className={cn("inline-flex items-baseline gap-2 font-medium tabular-nums", sizes[size], className)}>
       {money(paise)}
       {compareAt && compareAt > paise && (
         <span className="text-[0.8em] font-medium text-ink-3 line-through">{money(compareAt)}</span>
@@ -48,8 +48,8 @@ export function EmptyState({ icon, title, body, action, className }: {
   icon?: ReactNode; title: string; body?: ReactNode; action?: ReactNode; className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center rounded-3xl bg-surface px-6 py-12 text-center ring-1 ring-line", className)}>
-      {icon && <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-blush-100 text-pink">{icon}</div>}
+    <div className={cn("flex flex-col items-center rounded-[2px] bg-surface px-6 py-14 text-center ring-1 ring-line", className)}>
+      {icon && <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-blush-100 text-pink">{icon}</div>}
       <h3 className="font-display text-2xl">{title}</h3>
       {body && <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-2">{body}</p>}
       {action && <div className="mt-6">{action}</div>}
@@ -58,14 +58,14 @@ export function EmptyState({ icon, title, body, action, className }: {
 }
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn("rounded-3xl bg-surface p-5 shadow-soft ring-1 ring-line md:p-6", className)}>{children}</div>;
+  return <div className={cn("rounded-[2px] bg-surface p-5 ring-1 ring-line md:p-7", className)}>{children}</div>;
 }
 
 export function Segmented<T extends string>({ value, onChange, options, className }: {
   value: T; onChange: (v: T) => void; options: { value: T; label: ReactNode }[]; className?: string;
 }) {
   return (
-    <div role="tablist" className={cn("inline-flex rounded-full bg-blush-100 p-1", className)}>
+    <div role="tablist" className={cn("inline-flex rounded-[2px] bg-blush-100 p-1", className)}>
       {options.map((o) => (
         <button
           key={o.value}
@@ -73,8 +73,8 @@ export function Segmented<T extends string>({ value, onChange, options, classNam
           aria-selected={value === o.value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-[13px] font-semibold transition-all",
-            value === o.value ? "bg-surface text-ink shadow-sm" : "text-ink-2 hover:text-ink",
+            "inline-flex min-h-10 items-center gap-2 rounded-[2px] px-4 text-[12px] font-medium tracking-[0.1em] uppercase transition-all",
+            value === o.value ? "bg-surface text-ink shadow-soft" : "text-ink-2 hover:text-ink",
           )}
         >
           {o.label}

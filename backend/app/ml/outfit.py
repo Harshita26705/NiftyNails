@@ -51,7 +51,7 @@ def _describe(lab: tuple[float, float, float]) -> str:
     return min(COLOUR_NAMES_FOR_DESCRIPTION.items(), key=lambda kv: delta_e(lab, kv[1]))[0]
 
 
-def _subject_mask(bgr: np.ndarray) -> tuple[np.ndarray, bool]:
+def subject_mask(bgr: np.ndarray) -> tuple[np.ndarray, bool]:
     h, w = bgr.shape[:2]
     mask = np.zeros((h, w), np.uint8)
     rect = (int(w * 0.1), int(h * 0.05), int(w * 0.8), int(h * 0.9))
@@ -69,7 +69,7 @@ def _subject_mask(bgr: np.ndarray) -> tuple[np.ndarray, bool]:
     return fg, False
 
 
-def _skin_mask(bgr: np.ndarray) -> np.ndarray:
+def skin_mask(bgr: np.ndarray) -> np.ndarray:
     ycrcb = cv2.cvtColor(bgr, cv2.COLOR_BGR2YCrCb)
     return cv2.inRange(ycrcb, (40, 138, 80), (240, 175, 125)) > 0
 
@@ -194,8 +194,8 @@ def analyse_outfit(rgb: np.ndarray) -> OutfitAnalysis:
     if scale < 1:
         bgr = cv2.resize(bgr, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
 
-    fg, isolated = _subject_mask(bgr)
-    skin = _skin_mask(bgr)
+    fg, isolated = subject_mask(bgr)
+    skin = skin_mask(bgr)
     garment = (fg > 0) & ~skin
     use = garment if garment.sum() >= 0.4 * max(fg.sum(), 1) else fg > 0
     pixels = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)[use]

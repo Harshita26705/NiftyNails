@@ -43,6 +43,8 @@ DISTAL = {"thumb": (3, 4), "index": (7, 8), "middle": (11, 12), "ring": (15, 16)
 # Plausible adult finger widths at the nail bed (mm) — outside this range the measurement is suspect.
 PLAUSIBLE_WIDTH_MM = {"thumb": (12.0, 24.0), "index": (9.5, 20.0), "middle": (9.5, 20.0),
                       "ring": (9.0, 19.5), "pinky": (7.5, 17.0)}
+# Below this, the reference detection itself is too shaky (clutter, tilt, partial match) to calibrate on at all.
+MIN_REFERENCE_QUALITY = 0.4
 
 
 @dataclass
@@ -454,6 +456,13 @@ def estimate_sizes(
     if ref is None:
         return _fail("We couldn't find the reference coin/card. Place it flat next to your hand, fully visible and "
                      "not touching your fingers.", warnings, _preview(rgb, hand, None, {}))
+    if ref.quality < MIN_REFERENCE_QUALITY:
+        # A geometrically weak match (cluttered/patterned background, partial occlusion, steep tilt) still
+        # yields *some* mm_per_px — but calibrating on it produces confidently-wrong-looking sizes rather
+        # than an honest "we're not sure". Refuse outright instead of shipping numbers built on noise.
+        return _fail("We couldn't get a clear, reliable reading of your reference coin/card. Try a plainer "
+                     "background, with the coin/card flat, fully visible and well lit.", warnings,
+                     _preview(rgb, hand, ref, {}))
 
     knuckle_span_mm = float(np.linalg.norm(hand.points[5] - hand.points[17])) * ref.mm_per_px
     scale_plausible = 45 <= knuckle_span_mm <= 100

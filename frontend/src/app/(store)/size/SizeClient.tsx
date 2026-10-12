@@ -2,7 +2,7 @@
 
 import { AlertTriangle, Check, CheckCircle2, Coins, CreditCard, Hand, Lightbulb, Ruler, ScanLine, ShieldCheck, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { PhotoDrop } from "@/components/ai/PhotoDrop";
+import { PhotoSourcePicker } from "@/components/ai/PhotoSourcePicker";
 import { FingerSizeInputs } from "@/components/store/SizePicker";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, ConfidenceMeter } from "@/components/ui/bits";
@@ -117,9 +117,9 @@ export function SizeClient() {
   return (
     <main className="mx-auto max-w-6xl px-5 pt-6 md:px-6 md:pt-12">
       <div className="max-w-2xl">
-        <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-pink uppercase"><Ruler className="size-4" /> Find my nail size</p>
+        <p className="inline-flex items-center gap-2 eyebrow"><Ruler className="size-4" /> Find my nail size</p>
         <h1 className="mt-2 font-display text-[38px] leading-[1.02] tracking-[-0.025em] md:text-[56px]">
-          Your perfect fit, <em className="text-pink italic">from one photo.</em>
+          Your perfect fit, <em className="font-normal text-pink italic normal-case">from one photo.</em>
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
           We measure your nails against a coin or card using computer vision and map them to our sizes 0–9. It&apos;s an
@@ -162,15 +162,16 @@ export function SizeClient() {
         </div>
 
         <div className="space-y-4">
-          <PhotoDrop preview={preview} onFile={onFile} capture title="Take or upload your hand photo"
-            hint="One hand at a time. We'll use it to estimate all five fingers (sizes are usually the same on both hands).">
+          <PhotoSourcePicker preview={preview} onFile={onFile} title="Take or upload your hand photo"
+            hint="One hand at a time. We'll use it to estimate all five fingers (sizes are usually the same on both hands)."
+            liveHint="Hand flat, coin beside it, whole hand in frame">
             {handState !== "idle" && (
               <span className={cn("absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold shadow backdrop-blur",
                 handState === "found" ? "bg-mint/95 text-success" : handState === "checking" ? "bg-white/90 text-ink-2" : "bg-[#fff6e8]/95 text-[#7a4a00]")}>
                 {handState === "found" ? <><Check className="size-4" /> Hand found</> : handState === "checking" ? "Checking photo…" : <><AlertTriangle className="size-4" /> Hand not clear — try the tips</>}
               </span>
             )}
-          </PhotoDrop>
+          </PhotoSourcePicker>
           <Button full size="lg" onClick={measure} loading={busy} disabled={!blob || handState === "checking"} icon={<ScanLine className="size-4" />}>
             {busy ? "Measuring…" : "Measure my nails"}
           </Button>
@@ -244,7 +245,7 @@ export function SizeClient() {
       <section id="guide" className="mt-16 scroll-mt-24">
         <div className="grid gap-6 md:grid-cols-2 md:gap-10">
           <div>
-            <p className="text-[11px] font-bold tracking-[0.18em] text-pink uppercase">Sizing guide</p>
+            <p className="eyebrow">Sizing guide</p>
             <h2 className="mt-2 font-display text-[30px] leading-tight md:text-[40px]">Measure by hand</h2>
             <ol className="mt-4 space-y-3 text-[14.5px] leading-relaxed text-ink-2">
               <li><b className="text-ink">1.</b> Lay a strip of paper or tape across the widest part of each nail, sidewall to sidewall.</li>

@@ -19,7 +19,7 @@ export default async function Home() {
   ]);
 
   // Hero trio: a deliberately contrasting mix; falls back to featured/popular as the catalogue changes.
-  const HERO_PICKS = ["pink-bow-coquette", "barbie-dreamhouse", "strawberry-milk"];
+  const HERO_PICKS = ["milky-pearl-glaze", "champagne-bride", "mocha-latte-marble"];
   const pool = [...featured.items, ...popular.items, ...all.items];
   const picked = HERO_PICKS.map((s) => pool.find((p) => p.slug === s)).filter((p): p is Product => !!p);
   const heroProducts = [...picked, ...featured.items.filter((p) => !HERO_PICKS.includes(p.slug))].slice(0, 3);
@@ -28,14 +28,13 @@ export default async function Home() {
     samples[cat.slug] = all.items.find((p) => p.category?.slug === cat.slug && p.is_featured)
       ?? all.items.find((p) => p.category?.slug === cat.slug);
   }
-  const coquette = all.items.find((p) => p.slug === "pink-bow-coquette") ?? heroProducts[0];
+  const coquette = all.items.find((p) => p.slug === "champagne-bride") ?? heroProducts[0];
 
   return (
     <main>
       <Hero
         title={site.hero_title ?? "Your nails, considered."}
-        subtitle={site.hero_subtitle ?? "Handmade press-ons, designed with you."}
-        products={heroProducts.slice(0, 3)}
+        subtitle={site.hero_subtitle ?? "Sculpted by hand, fitted to you and made to order. Choose from the collection, or design your own and we will make it real."}
       />
       <Trending products={popular.items} />
       <ShopByStyle categories={(options?.categories ?? []).filter((c) => samples[c.slug])} samples={samples} />

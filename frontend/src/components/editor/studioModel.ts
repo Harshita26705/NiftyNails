@@ -1,7 +1,7 @@
 import { SMALL_CHARMS } from "@/components/nails/charms";
 import type { NailSpec } from "@/components/nails/Nail";
 import { CHARM_BASE_SCALE } from "@/lib/catalog";
-import type { CatalogOptions, DesignConfig, DesignObject, NailKey, NailLength, ProductDetail } from "@/lib/types";
+import type { CatalogOptions, DesignConfig, DesignObject, NailKey, NailLength, Product, ProductDetail } from "@/lib/types";
 import { NAIL_KEYS } from "@/lib/types";
 import type { EditorCharm } from "./CharmLayer";
 
@@ -34,6 +34,14 @@ export const objectId = charmId;
 
 export const emptyNail = (): StudioNail => ({ colour: null, finish: null, pattern: null, pattern_colour: null, paint: null, charms: [], objects: [] });
 
+/** Backfills any fields missing from an older saved draft (e.g. a `nifty.studio.v1` draft from before `objects` existed). */
+export function normalizeStudio(raw: Studio): Studio {
+  return {
+    ...raw,
+    nails: Object.fromEntries(NAIL_KEYS.map((k) => [k, { ...emptyNail(), ...raw.nails?.[k] }])) as Record<NailKey, StudioNail>,
+  };
+}
+
 export function blankStudio(catalog: CatalogOptions | null): Studio {
   const colour = catalog?.colours.find((c) => c.slug === "baby-pink") ?? catalog?.colours[0];
   const finish = catalog?.finishes.find((f) => f.slug === "glossy") ?? catalog?.finishes[0];
@@ -47,15 +55,16 @@ export function blankStudio(catalog: CatalogOptions | null): Studio {
   };
 }
 
-/** Start the studio from an existing catalogue design ("Customise this design"). */
-export function studioFromProduct(p: ProductDetail, catalog: CatalogOptions | null): Studio {
+/** Start the studio from an existing catalogue design ("Customise this design" / "Try on live"). */
+export function studioFromProduct(p: Product | ProductDetail, catalog: CatalogOptions | null): Studio {
   const s = blankStudio(catalog);
   s.shape = p.shape?.slug ?? s.shape;
   s.length = p.length;
   s.finish = p.finish?.slug ?? s.finish;
   s.base_colour = p.colours.find((c) => c.role === "base")?.slug ?? p.colours[0]?.slug ?? s.base_colour;
   const accent = p.colours.find((c) => c.role !== "base")?.slug ?? null;
-  const pattern = p.patterns[0]?.slug ?? null;
+  // `patterns` only exists on the fuller ProductDetail (product cards only carry the Product summary).
+  const pattern = ("patterns" in p ? p.patterns[0]?.slug : undefined) ?? null;
   const accentOnly = new Set(["hearts", "florals", "checkerboard", "leopard"]);
   const accentKeys: NailKey[] = p.charms.reduce((n, c) => n + c.quantity, 0) > 2 ? ["L4", "R4", "L2", "R2"] : ["L4", "R4"];
 

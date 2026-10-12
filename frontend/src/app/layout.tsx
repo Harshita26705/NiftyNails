@@ -1,19 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Cormorant_Garamond, Jost } from "next/font/google";
 import { NailDefs } from "@/components/nails/NailDefs";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
-  axes: ["SOFT", "opsz"],
-  variable: "--font-fraunces",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const jost = Jost({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-jost",
   display: "swap",
 });
 
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf6ef",
+  themeColor: "#fcf5eb",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-IN" className={`${fraunces.variable} ${jakarta.variable}`}>
+    <html lang="en-IN" className={`${cormorant.variable} ${jost.variable}`}>
       <body className="min-h-dvh">
         <NailDefs />
         {children}
